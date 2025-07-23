@@ -18,6 +18,12 @@
             border-radius: 10px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
+        .icon{
+            width:2.5rem;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
         h1 {
             color: #333;
             text-align: center;
@@ -115,7 +121,8 @@
 </head>
 <body>
     <div class="container">
-        <h1>🌍 Geolocation Test Page</h1>
+        <img src="icons/icon.svg" class="icon" alt="Location Override Icon" />
+        <h1>Geolocation Test Page</h1>
         
         <div class="instructions">
             <h3>📋 How to test the Location Override extension:</h3>
@@ -153,12 +160,16 @@
                 <div class="coord-value" id="acc">-</div>
             </div>
             <div class="coord-item">
+                <div class="coord-label">Heading</div>
+                <div class="coord-value" id="heading">-</div>
+            </div>
+            <div class="coord-item">
                 <div class="coord-label">Timestamp</div>
                 <div class="coord-value" id="time">-</div>
             </div>
         </div>
 
-        <div id="output" class="output">Ready to test geolocation...\n\nClick "Get Current Position" to start!</div>
+        <div id="output" class="output"></div>
     </div>
 
     <script>
@@ -182,6 +193,7 @@
             document.getElementById('lng').textContent = position.coords.longitude.toFixed(6);
             document.getElementById('acc').textContent = `${position.coords.accuracy} m`;
             document.getElementById('time').textContent = new Date(position.timestamp).toLocaleTimeString();
+            document.getElementById('heading').textContent = position.coords.heading === undefined ? `Not supplied` : `${position.coords.heading} °`;
             coordinates.style.display = 'grid';
         }
 
@@ -201,6 +213,7 @@
                     log(`Latitude: ${position.coords.latitude}`);
                     log(`Longitude: ${position.coords.longitude}`);
                     log(`Accuracy: ${position.coords.accuracy} meters`);
+                    log(`Heading: ${position.coords.heading === undefined ? `Not supplied` : `${position.coords.heading} °`}`);
                     log(`Timestamp: ${new Date(position.timestamp).toLocaleString()}`);
                     log('---');
 
@@ -244,6 +257,7 @@
                     log(`Latitude: ${position.coords.latitude}`);
                     log(`Longitude: ${position.coords.longitude}`);
                     log(`Accuracy: ${position.coords.accuracy} meters`);
+                    log(`Heading: ${position.coords.heading === undefined ? `Not supplied` : `${position.coords.heading} °`}`);
                     log(`Timestamp: ${new Date(position.timestamp).toLocaleString()}`);
                     log('---');
 
@@ -280,13 +294,14 @@
         }
 
         function clearOutput() {
-            output.textContent = 'Ready to test geolocation...\n\nClick "Get Current Position" to start!';
+            output.textContent = "Ready to test geolocation...\nClick \"Get Current Position\" to start!\n";
             status.innerHTML = '';
             coordinates.style.display = 'none';
         }
 
         // Auto-test on page load (optional)
         window.addEventListener('load', () => {
+            clearOutput();
             log('🚀 Geolocation test page loaded');
             log('Open DevTools and go to the "Location Override" panel to test!');
             log('---');
