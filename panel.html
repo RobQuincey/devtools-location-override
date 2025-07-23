@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Location Override Panel</title>
+    <link rel="stylesheet" href="panel.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>🌍 Location Override</h1>
+            <p>Override geolocation for local development and testing</p>
+        </header>
+
+        <div class="controls">
+            <div class="toggle-section">
+                <label class="toggle">
+                    <input type="checkbox" id="enableOverride">
+                    <span class="slider"></span>
+                    <span class="label">Enable Location Override</span>
+                </label>
+            </div>
+
+            <div class="location-inputs" id="locationInputs">
+                <div class="input-group">
+                    <label for="latitude">Latitude:</label>
+                    <input type="number" id="latitude" step="any" placeholder="e.g., 37.7749" value="37.7749">
+                    <small>Range: -90 to 90</small>
+                </div>
+
+                <div class="input-group">
+                    <label for="longitude">Longitude:</label>
+                    <input type="number" id="longitude" step="any" placeholder="e.g., -122.4194" value="-122.4194">
+                    <small>Range: -180 to 180</small>
+                </div>
+
+                <div class="input-group">
+                    <label for="accuracy">Accuracy (meters):</label>
+                    <input type="number" id="accuracy" min="1" placeholder="e.g., 10" value="10">
+                    <small>Minimum: 1 meter</small>
+                </div>
+
+                <div class="preset-section">
+                    <label>Quick Presets:</label>
+                    <div class="preset-buttons">
+                        <button class="preset-btn" data-lat="37.7749" data-lng="-122.4194" data-acc="10">
+                            📍 San Francisco
+                        </button>
+                        <button class="preset-btn" data-lat="40.7128" data-lng="-74.0060" data-acc="10">
+                            🗽 New York
+                        </button>
+                        <button class="preset-btn" data-lat="51.5074" data-lng="-0.1278" data-acc="10">
+                            🏰 London
+                        </button>
+                        <button class="preset-btn" data-lat="35.6762" data-lng="139.6503" data-acc="10">
+                            🗾 Tokyo
+                        </button>
+                        <button class="preset-btn" data-lat="-33.8688" data-lng="151.2093" data-acc="10">
+                            🇦🇺 Sydney
+                        </button>
+                    </div>
+                </div>
+
+                <div class="action-buttons">
+                    <button id="applyBtn" class="apply-btn">Apply Override</button>
+                    <button id="clearBtn" class="clear-btn">Clear Override</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="status-section">
+            <div id="status" class="status"></div>
+        </div>
+
+        <div class="info-section">
+            <h3>📋 Current Override Status</h3>
+            <div id="currentLocation" class="current-location">
+                <p>No override active</p>
+            </div>
+        </div>
+
+        <div class="help-section">
+            <details>
+                <summary>📖 Help & Usage</summary>
+                <div class="help-content">
+                    <h4>How to use:</h4>
+                    <ol>
+                        <li>Enable the location override toggle</li>
+                        <li>Enter your desired coordinates or use a preset</li>
+                        <li>Click "Apply Override" to activate</li>
+                        <li>Refresh the page to see the new location</li>
+                    </ol>
+                    
+                    <h4>Notes:</h4>
+                    <ul>
+                        <li>The override persists across page reloads</li>
+                        <li>Works with all geolocation APIs (getCurrentPosition, watchPosition)</li>
+                        <li>Use "Clear Override" to restore normal geolocation behavior</li>
+                        <li>Changes take effect immediately on new geolocation requests</li>
+                    </ul>
+                </div>
+            </details>
+        </div>
+    </div>
+
+    <script src="panel.js"></script>
+</body>
+</html>

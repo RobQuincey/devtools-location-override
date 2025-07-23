@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Geolocation Test Page</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        button {
+            padding: 12px 20px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .output {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            padding: 20px;
+            margin-top: 20px;
+            min-height: 100px;
+            white-space: pre-wrap;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+        }
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .status.info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        .coordinates {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .coord-item {
+            background: #e9ecef;
+            padding: 15px;
+            border-radius: 5px;
+            text-align: center;
+        }
+        .coord-label {
+            font-weight: bold;
+            color: #495057;
+            margin-bottom: 5px;
+        }
+        .coord-value {
+            font-size: 18px;
+            color: #007bff;
+            font-family: 'Courier New', monospace;
+        }
+        .instructions {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        .instructions h3 {
+            margin-top: 0;
+            color: #856404;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌍 Geolocation Test Page</h1>
+        
+        <div class="instructions">
+            <h3>📋 How to test the Location Override extension:</h3>
+            <ol>
+                <li>Open DevTools (F12)</li>
+                <li>Go to the "Location Override" panel</li>
+                <li>Enable location override and set coordinates</li>
+                <li>Click "Start Watching Position" below</li>
+                <li>Change the coordinates in DevTools and click "Apply Override"</li>
+                <li>Watch how the position updates immediately!</li>
+            </ol>
+            <p><strong>💡 Tip:</strong> Watch Position will continuously receive updates. Try changing locations while watching to see real-time updates!</p>
+        </div>
+
+        <div class="button-group">
+            <button onclick="getCurrentLocation()">Get Current Position</button>
+            <button onclick="watchLocation()" id="watchBtn">Start Watching Position</button>
+            <button onclick="stopWatching()" id="stopBtn" disabled>Stop Watching</button>
+            <button onclick="clearOutput()">Clear Output</button>
+        </div>
+
+        <div id="status"></div>
+        
+        <div id="coordinates" class="coordinates" style="display: none;">
+            <div class="coord-item">
+                <div class="coord-label">Latitude</div>
+                <div class="coord-value" id="lat">-</div>
+            </div>
+            <div class="coord-item">
+                <div class="coord-label">Longitude</div>
+                <div class="coord-value" id="lng">-</div>
+            </div>
+            <div class="coord-item">
+                <div class="coord-label">Accuracy</div>
+                <div class="coord-value" id="acc">-</div>
+            </div>
+            <div class="coord-item">
+                <div class="coord-label">Timestamp</div>
+                <div class="coord-value" id="time">-</div>
+            </div>
+        </div>
+
+        <div id="output" class="output">Ready to test geolocation...\n\nClick "Get Current Position" to start!</div>
+    </div>
+
+    <script>
+        let watchId = null;
+        let output = document.getElementById('output');
+        let status = document.getElementById('status');
+        let coordinates = document.getElementById('coordinates');
+
+        function log(message) {
+            const timestamp = new Date().toLocaleTimeString();
+            output.textContent += `[${timestamp}] ${message}\n`;
+            output.scrollTop = output.scrollHeight;
+        }
+
+        function showStatus(message, type = 'info') {
+            status.innerHTML = `<div class="status ${type}">${message}</div>`;
+        }
+
+        function updateCoordinatesDisplay(position) {
+            document.getElementById('lat').textContent = position.coords.latitude.toFixed(6);
+            document.getElementById('lng').textContent = position.coords.longitude.toFixed(6);
+            document.getElementById('acc').textContent = `${position.coords.accuracy} m`;
+            document.getElementById('time').textContent = new Date(position.timestamp).toLocaleTimeString();
+            coordinates.style.display = 'grid';
+        }
+
+        function getCurrentLocation() {
+            log('Requesting current position...');
+            showStatus('🔍 Getting current location...', 'info');
+
+            if (!navigator.geolocation) {
+                log('ERROR: Geolocation is not supported by this browser');
+                showStatus('❌ Geolocation not supported', 'error');
+                return;
+            }
+
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    log('✅ Position received successfully!');
+                    log(`Latitude: ${position.coords.latitude}`);
+                    log(`Longitude: ${position.coords.longitude}`);
+                    log(`Accuracy: ${position.coords.accuracy} meters`);
+                    log(`Timestamp: ${new Date(position.timestamp).toLocaleString()}`);
+                    log('---');
+
+                    updateCoordinatesDisplay(position);
+                    showStatus('✅ Location retrieved successfully!', 'success');
+                },
+                (error) => {
+                    log(`❌ Error getting position: ${error.message}`);
+                    log(`Error code: ${error.code}`);
+                    log('---');
+                    showStatus(`❌ Error: ${error.message}`, 'error');
+                },
+                {
+                    enableHighAccuracy: true,
+                    timeout: 10000,
+                    maximumAge: 0
+                }
+            );
+        }
+
+        function watchLocation() {
+            if (watchId !== null) {
+                log('Already watching position');
+                return;
+            }
+
+            log('Starting to watch position...');
+            showStatus('👀 Starting to watch position...', 'info');
+
+            if (!navigator.geolocation) {
+                log('ERROR: Geolocation is not supported by this browser');
+                showStatus('❌ Geolocation not supported', 'error');
+                return;
+            }
+
+            let updateCount = 0;
+            watchId = navigator.geolocation.watchPosition(
+                (position) => {
+                    updateCount++;
+                    log(`📍 Position update #${updateCount} received:`);
+                    log(`Latitude: ${position.coords.latitude}`);
+                    log(`Longitude: ${position.coords.longitude}`);
+                    log(`Accuracy: ${position.coords.accuracy} meters`);
+                    log(`Timestamp: ${new Date(position.timestamp).toLocaleString()}`);
+                    log('---');
+
+                    updateCoordinatesDisplay(position);
+                    showStatus(`📍 Position update #${updateCount} received`, 'success');
+                },
+                (error) => {
+                    log(`❌ Watch error: ${error.message}`);
+                    log(`Error code: ${error.code}`);
+                    log('---');
+                    showStatus(`❌ Watch error: ${error.message}`, 'error');
+                },
+                {
+                    enableHighAccuracy: true,
+                    timeout: 10000,
+                    maximumAge: 0
+                }
+            );
+
+            document.getElementById('watchBtn').disabled = true;
+            document.getElementById('stopBtn').disabled = false;
+        }
+
+        function stopWatching() {
+            if (watchId !== null) {
+                navigator.geolocation.clearWatch(watchId);
+                watchId = null;
+                log('🛑 Stopped watching position');
+                showStatus('🛑 Stopped watching position', 'info');
+                
+                document.getElementById('watchBtn').disabled = false;
+                document.getElementById('stopBtn').disabled = true;
+            }
+        }
+
+        function clearOutput() {
+            output.textContent = 'Ready to test geolocation...\n\nClick "Get Current Position" to start!';
+            status.innerHTML = '';
+            coordinates.style.display = 'none';
+        }
+
+        // Auto-test on page load (optional)
+        window.addEventListener('load', () => {
+            log('🚀 Geolocation test page loaded');
+            log('Open DevTools and go to the "Location Override" panel to test!');
+            log('---');
+        });
+    </script>
+</body>
+</html>

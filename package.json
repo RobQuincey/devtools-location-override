@@ -1,0 +1,32 @@
+{
+  "name": "devtools-location-override",
+  "version": "1.0.0",
+  "description": "Chrome/Edge DevTools extension for overriding geolocation during development",
+  "keywords": [
+    "chrome-extension",
+    "devtools",
+    "geolocation",
+    "location",
+    "override",
+    "development",
+    "testing"
+  ],
+  "author": "Developer",
+  "license": "MIT",
+  "scripts": {
+    "build": "echo 'No build process required for this extension'",
+    "pack": "web-ext build --source-dir . --artifacts-dir ./dist",
+    "lint": "web-ext lint"
+  },
+  "devDependencies": {
+    "web-ext": "^7.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/devtools-location-override.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yourusername/devtools-location-override/issues"
+  },
+  "homepage": "https://github.com/yourusername/devtools-location-override#readme"
+}
