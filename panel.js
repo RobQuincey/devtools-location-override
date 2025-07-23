@@ -60,7 +60,8 @@ class LocationOverridePanel {
                 document.getElementById('latitude').value = settings.latitude || 37.7749;
                 document.getElementById('longitude').value = settings.longitude || -122.4194;
                 document.getElementById('accuracy').value = settings.accuracy || 10;
-                
+                document.getElementById('heading').value = settings.heading || null;
+
                 this.updateUI();
                 this.updateCurrentLocation();
             }
@@ -103,6 +104,7 @@ class LocationOverridePanel {
         const lat = parseFloat(document.getElementById('latitude').value);
         const lng = parseFloat(document.getElementById('longitude').value);
         const acc = parseInt(document.getElementById('accuracy').value);
+        const heading = parseFloat(document.getElementById('heading').value) || null;
 
         let isValid = true;
         let errors = [];
@@ -118,7 +120,12 @@ class LocationOverridePanel {
         }
 
         if (isNaN(acc) || acc < 1) {
-            errors.push('Accuracy must be at least 1 meter');
+            errors.push('Accuracy must be at least 1 metre');
+            isValid = false;
+        }
+        
+        if (heading !== null && (isNaN(heading) || heading < 0 || heading > 360)) {
+            errors.push('Heading must be between 0 and 360 degrees, or not set');
             isValid = false;
         }
 
@@ -147,7 +154,8 @@ class LocationOverridePanel {
             enabled: true,
             latitude: parseFloat(document.getElementById('latitude').value),
             longitude: parseFloat(document.getElementById('longitude').value),
-            accuracy: parseInt(document.getElementById('accuracy').value)
+            accuracy: parseInt(document.getElementById('accuracy').value),
+            heading: parseFloat(document.getElementById('heading').value) || null
         };
 
         try {
@@ -205,12 +213,14 @@ class LocationOverridePanel {
             const lat = document.getElementById('latitude').value;
             const lng = document.getElementById('longitude').value;
             const acc = document.getElementById('accuracy').value;
+            const heading = document.getElementById('heading').value || 'N/A';
             
             currentLocationDiv.innerHTML = `
                 <p><strong>Override Active:</strong></p>
                 <p>Latitude: ${lat}°</p>
                 <p>Longitude: ${lng}°</p>
                 <p>Accuracy: ${acc} meters</p>
+                <p>Heading: ${heading}°</p>
             `;
         } else {
             currentLocationDiv.innerHTML = '<p>No override active</p>';

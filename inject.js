@@ -14,7 +14,7 @@
     const activeWatches = new Map();
 
     // Create a mock position object
-    function createMockPosition(lat, lng, accuracy) {
+    function createMockPosition(lat, lng, accuracy, heading) {
         return {
             coords: {
                 latitude: lat,
@@ -22,7 +22,7 @@
                 altitude: null,
                 accuracy: accuracy,
                 altitudeAccuracy: null,
-                heading: null,
+                heading: heading,
                 speed: null
             },
             timestamp: Date.now()
@@ -39,7 +39,8 @@
                 const position = createMockPosition(
                     locationOverride.latitude,
                     locationOverride.longitude,
-                    locationOverride.accuracy
+                    locationOverride.accuracy,
+                    locationOverride.heading || null
                 );
                 successCallback(position);
             }, 10);
@@ -77,7 +78,8 @@
                     const position = createMockPosition(
                         locationOverride.latitude,
                         locationOverride.longitude,
-                        locationOverride.accuracy
+                        locationOverride.accuracy,
+                        locationOverride.heading || null
                     );
                     successCallback(position);
                 }
@@ -89,7 +91,8 @@
                     const position = createMockPosition(
                         locationOverride.latitude,
                         locationOverride.longitude,
-                        locationOverride.accuracy
+                        locationOverride.accuracy,
+                        locationOverride.heading || null
                     );
                     successCallback(position);
                 }
@@ -147,7 +150,8 @@
                 const position = createMockPosition(
                     locationOverride.latitude,
                     locationOverride.longitude,
-                    locationOverride.accuracy
+                    locationOverride.accuracy,
+                    locationOverride.heading || null
                 );
                 watchInfo.successCallback(position);
             });

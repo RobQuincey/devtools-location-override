@@ -8,7 +8,8 @@
 <body>
     <div class="container">
         <header class="header">
-            <h1>🌍 Location Override</h1>
+            <img src="icons/icon.svg" alt="Location Override Icon" class="icon">
+            <h1>Location Override</h1>
             <p>Override geolocation for local development and testing</p>
         </header>
 
@@ -40,6 +41,11 @@
                     <small>Minimum: 1 meter</small>
                 </div>
 
+                <div class="input-group">
+                    <label for="heading">Heading (degrees):</label>
+                    <input type="number" id="heading" min="0" placeholder="e.g., 180" value="360">
+                    <small>Range: 0 - 360</small>
+                </div>
                 <div class="preset-section">
                     <label>Quick Presets:</label>
                     <div class="preset-buttons">
