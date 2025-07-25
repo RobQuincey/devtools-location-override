@@ -13,7 +13,13 @@
             <p>Override geolocation for local development and testing</p>
         </header>
 
-        <div class="controls">
+        <div class="tabs">
+            <button class="tab-button active" data-tab="manual">Manual Override</button>
+            <button class="tab-button" data-tab="route">Route Simulation</button>
+        </div>
+
+        <div class="tab-content active" id="manual-tab">
+            <div class="controls">
             <div class="toggle-section">
                 <label class="toggle">
                     <input type="checkbox" id="enableOverride">
@@ -125,6 +131,80 @@
                     </ul>
                 </div>
             </details>
+        </div>
+        </div>
+
+        <div class="tab-content" id="route-tab">
+            <div class="route-controls">
+                <div class="file-upload-section">
+                    <h3>📁 Upload Route File</h3>
+                    <div class="file-input-container">
+                        <input type="file" id="routeFile" accept=".kml,.geojson,.json,.gpx" class="file-input">
+                        <label for="routeFile" class="file-input-label">
+                            Choose KML, GeoJSON, or GPX file
+                        </label>
+                    </div>
+                    <div class="file-info" id="fileInfo" style="display: none;">
+                        <p><strong>File:</strong> <span id="fileName"></span></p>
+                        <p><strong>Points:</strong> <span id="pointCount"></span></p>
+                        <p><strong>Duration:</strong> <span id="routeDuration"></span></p>
+                    </div>
+                </div>
+
+                <div class="route-settings" id="routeSettings" style="display: none;">
+                    <h3>⚙️ Simulation Settings</h3>
+                    <div class="input-group">
+                        <label for="playbackSpeed">Playback Speed:</label>
+                        <select id="playbackSpeed">
+                            <option value="0.5">0.5x (Half speed)</option>
+                            <option value="1" selected>1x (Real time)</option>
+                            <option value="2">2x (Double speed)</option>
+                            <option value="5">5x (5x speed)</option>
+                            <option value="10">10x (10x speed)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="defaultInterval">Default Interval (seconds):</label>
+                        <input type="number" id="defaultInterval" min="0.1" step="0.1" value="1.0">
+                        <small>Used when timestamps are not available</small>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="defaultAccuracy">Default Accuracy (meters):</label>
+                        <input type="number" id="defaultAccuracy" min="1" value="10">
+                    </div>
+
+                    <div class="action-buttons">
+                        <button id="startRouteBtn" class="apply-btn">▶️ Start Route</button>
+                        <button id="pauseRouteBtn" class="pause-btn" disabled>⏸️ Pause</button>
+                        <button id="stopRouteBtn" class="clear-btn" disabled>⏹️ Stop</button>
+                    </div>
+                </div>
+
+                <div class="route-status-section">
+                    <div id="routeStatus" class="status"></div>
+                </div>
+                
+                <div class="route-progress" id="routeProgress" style="display: none;">
+                    <h3>🗺️ Route Progress</h3>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progressFill"></div>
+                        </div>
+                        <span class="progress-text" id="progressText">0%</span>
+                    </div>
+                    <div class="current-point" id="currentPoint">
+                        <p><strong>Current Position:</strong></p>
+                        <p>Latitude: <span id="currentLat">-</span>°</p>
+                        <p>Longitude: <span id="currentLng">-</span>°</p>
+                        <p>Step: <span id="currentStep">-</span> of <span id="totalSteps">-</span></p>
+                        <p>Time: <span id="currentTime">-</span></p>
+                    </div>
+                </div>
+
+
+            </div>
         </div>
     </div>
 

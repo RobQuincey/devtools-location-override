@@ -2,8 +2,19 @@
 (function() {
     'use strict';
 
+    // Guard to prevent multiple injections
+    if (window.locationOverrideContentScriptLoaded) {
+        return;
+    }
+    window.locationOverrideContentScriptLoaded = true;
+
+    let injected = false;
+
     // Inject the override script into the page's main world
     function injectScript() {
+        if (injected) return;
+        injected = true;
+
         const script = document.createElement('script');
         script.src = chrome.runtime.getURL('inject.js');
         script.onload = function() {
@@ -14,6 +25,12 @@
 
     // Listen for messages from DevTools panel
     chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+        if (request.action === 'ping') {
+            // Simple ping to check if content script is available
+            sendResponse({ success: true });
+            return true;
+        }
+        
         if (request.action === 'setLocationOverride') {
             // Forward to injected script
             window.postMessage({
@@ -34,13 +51,10 @@
         return true;
     });
 
-    // Inject script when DOM is ready
+    // Inject script when DOM is ready or immediately if already ready
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', injectScript);
     } else {
         injectScript();
     }
-
-    // Also inject immediately for dynamic pages
-    injectScript();
 })();

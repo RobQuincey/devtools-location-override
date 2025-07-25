@@ -19,18 +19,3 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         return true;
     }
 });
-
-// Inject script when tab is updated (for refresh handling)
-chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
-    if (changeInfo.status === 'loading' && tab.url && !tab.url.startsWith('chrome://')) {
-        try {
-            await chrome.scripting.executeScript({
-                target: { tabId: tabId },
-                files: ['content.js']
-            });
-        } catch (error) {
-            // Silently handle errors for pages where we can't inject
-            console.log('Could not inject into tab:', tab.url);
-        }
-    }
-});

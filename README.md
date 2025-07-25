@@ -6,7 +6,9 @@ A modern Chrome/Edge DevTools extension that allows developers to override `wind
 
 🌍 **Easy Location Override**: Override latitude, longitude, and accuracy with a simple interface
 🎯 **Quick Presets**: Pre-configured locations for major cities (San Francisco, New York, London, Tokyo, Sydney)
-🔄 **Persistent Settings**: Settings persist across page reloads and browser sessions
+�️ **Route Simulation**: Upload KML, GeoJSON, or GPX files to simulate movement along routes
+⏱️ **Time-based Playback**: Real-time or custom-speed route simulation with timestamp support
+�🔄 **Persistent Settings**: Settings persist across page reloads and browser sessions
 🛠️ **DevTools Integration**: Seamlessly integrated into Chrome/Edge Developer Tools
 🎨 **Modern UI**: Clean, intuitive interface with responsive design
 📱 **Real-time Updates**: Changes take effect immediately on new geolocation requests
@@ -27,14 +29,42 @@ This extension can be packaged and distributed through the Chrome Web Store or E
 
 ## Usage
 
+### Manual Location Override
+
 1. **Open DevTools**: Press F12 or right-click → "Inspect Element"
 2. **Find the Panel**: Look for the "Location Override" tab in DevTools
-3. **Enable Override**: Toggle the "Enable Location Override" switch
-4. **Set Coordinates**: 
+3. **Select Manual Override Tab**: Click on "Manual Override" tab
+4. **Enable Override**: Toggle the "Enable Location Override" switch
+5. **Set Coordinates**: 
    - Enter custom latitude/longitude values, or
    - Use one of the preset city locations
-5. **Apply Changes**: Click "Apply Override"
-6. **Test Your App**: Your web application will now receive the overridden location
+6. **Apply Changes**: Click "Apply Override"
+7. **Test Your App**: Your web application will now receive the overridden location
+
+### Route Simulation
+
+1. **Open DevTools**: Navigate to the "Location Override" panel
+2. **Select Route Simulation Tab**: Click on "Route Simulation" tab
+3. **Upload Route File**: Choose a KML, GeoJSON, or GPX file containing route data
+4. **Configure Settings**:
+   - Set playback speed (0.5x to 10x)
+   - Adjust default interval for points without timestamps
+   - Set default accuracy
+5. **Start Simulation**: Click "▶️ Start Route" to begin
+6. **Control Playback**: Use pause/resume and stop controls as needed
+
+#### Supported File Formats
+
+- **KML**: Google Earth format with LineString or Point coordinates
+- **GeoJSON**: Geographic data with LineString, Point, or MultiLineString features
+- **GPX**: GPS Exchange format with track points and waypoints
+
+#### Route File Requirements
+
+- Files should contain coordinate sequences (LineString/track points)
+- Timestamps are optional but recommended for realistic simulation
+- Altitude data is supported when available
+- Large files (1000+ points) are supported with performance optimization
 
 ### API Compatibility
 
@@ -96,9 +126,12 @@ No build process required - this is a pure JavaScript extension.
 ## Common Use Cases
 
 - **Local Development**: Test location-based features without GPS
+- **Route Testing**: Simulate movement along predefined paths
+- **GPS Simulation**: Test navigation apps with realistic route data
 - **Debugging**: Simulate different geographical locations
-- **QA Testing**: Verify app behavior across various coordinates
-- **Demo Preparation**: Set consistent location for presentations
+- **QA Testing**: Verify app behavior across various coordinates and routes
+- **Demo Preparation**: Set consistent location or route for presentations
+- **Performance Testing**: Test with large route datasets
 
 ## Troubleshooting
 
@@ -130,6 +163,13 @@ No build process required - this is a pure JavaScript extension.
 MIT License - see LICENSE file for details.
 
 ## Changelog
+
+### v1.1.0
+- Added Route Simulation feature
+- Support for KML, GeoJSON, and GPX file formats
+- Time-based route playback with variable speed control
+- Progress tracking and route visualization
+- Timestamp and altitude support from route files
 
 ### v1.0.0
 - Initial release

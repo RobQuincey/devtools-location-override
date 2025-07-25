@@ -2,6 +2,7 @@
 class LocationOverridePanel {
     constructor() {
         this.tabId = chrome.devtools.inspectedWindow.tabId;
+        this.routeSimulation = new RouteSimulation(this.tabId);
         this.init();
     }
 
@@ -12,6 +13,13 @@ class LocationOverridePanel {
     }
 
     bindEvents() {
+        // Tab switching
+        document.querySelectorAll('.tab-button').forEach(button => {
+            button.addEventListener('click', (e) => {
+                this.switchTab(e.target.dataset.tab);
+            });
+        });
+
         // Toggle override
         document.getElementById('enableOverride').addEventListener('change', (e) => {
             this.toggleOverride(e.target.checked);
@@ -48,6 +56,20 @@ class LocationOverridePanel {
         document.getElementById('clearBtn').addEventListener('click', () => {
             this.clearOverride();
         });
+    }
+
+    switchTab(tabName) {
+        // Update tab buttons
+        document.querySelectorAll('.tab-button').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+
+        // Update tab content
+        document.querySelectorAll('.tab-content').forEach(content => {
+            content.classList.remove('active');
+        });
+        document.getElementById(`${tabName}-tab`).classList.add('active');
     }
 
     async loadSettings() {
@@ -267,6 +289,492 @@ class LocationOverridePanel {
                 statusDiv.className = 'status';
             }, 3000);
         }
+    }
+}
+
+// Route Simulation Class
+class RouteSimulation {
+    constructor(tabId) {
+        this.tabId = tabId;
+        this.routeData = null;
+        this.isPlaying = false;
+        this.isPaused = false;
+        this.currentIndex = 0;
+        this.intervalId = null;
+        this.startTime = null;
+        this.pausedTime = 0;
+        this.bindRouteEvents();
+    }
+
+    bindRouteEvents() {
+        // File upload
+        document.getElementById('routeFile').addEventListener('change', (e) => {
+            this.handleFileUpload(e.target.files[0]);
+        });
+
+        // Route controls
+        document.getElementById('startRouteBtn').addEventListener('click', () => {
+            this.startRoute();
+        });
+
+        document.getElementById('pauseRouteBtn').addEventListener('click', () => {
+            this.pauseRoute();
+        });
+
+        document.getElementById('stopRouteBtn').addEventListener('click', () => {
+            this.stopRoute();
+        });
+    }
+
+    async handleFileUpload(file) {
+        if (!file) return;
+
+        try {
+            const text = await this.readFileAsText(file);
+            const extension = file.name.split('.').pop().toLowerCase();
+            
+            let routeData;
+            switch (extension) {
+                case 'kml':
+                    routeData = this.parseKML(text);
+                    break;
+                case 'geojson':
+                case 'json':
+                    routeData = this.parseGeoJSON(text);
+                    break;
+                case 'gpx':
+                    routeData = this.parseGPX(text);
+                    break;
+                default:
+                    throw new Error('Unsupported file format');
+            }
+
+            if (!routeData || routeData.length === 0) {
+                throw new Error('No valid coordinates found in file');
+            }
+
+            this.routeData = routeData;
+            await this.displayFileInfo(file.name, routeData.length);
+
+        } catch (error) {
+            console.error('File parsing error:', error);
+            this.showRouteStatus(`Error loading file: ${error.message}`, 'error');
+        }
+    }
+
+    readFileAsText(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = e => resolve(e.target.result);
+            reader.onerror = reject;
+            reader.readAsText(file);
+        });
+    }
+
+    parseKML(text) {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(text, 'application/xml');
+        const coordinates = [];
+
+        // Look for LineString coordinates
+        const lineStrings = doc.querySelectorAll('LineString coordinates');
+        lineStrings.forEach(coordElement => {
+            const coordText = coordElement.textContent.trim();
+            const points = coordText.split(/\s+/);
+            
+            points.forEach(point => {
+                const parts = point.split(',');
+                if (parts.length >= 2) {
+                    const lng = parseFloat(parts[0]);
+                    const lat = parseFloat(parts[1]);
+                    const alt = parts[2] ? parseFloat(parts[2]) : null;
+                    
+                    if (!isNaN(lat) && !isNaN(lng)) {
+                        coordinates.push({ lat, lng, altitude: alt });
+                    }
+                }
+            });
+        });
+
+        // Also look for individual Placemark points
+        const placemarks = doc.querySelectorAll('Placemark Point coordinates');
+        placemarks.forEach(coordElement => {
+            const coordText = coordElement.textContent.trim();
+            const parts = coordText.split(',');
+            if (parts.length >= 2) {
+                const lng = parseFloat(parts[0]);
+                const lat = parseFloat(parts[1]);
+                const alt = parts[2] ? parseFloat(parts[2]) : null;
+                
+                if (!isNaN(lat) && !isNaN(lng)) {
+                    coordinates.push({ lat, lng, altitude: alt });
+                }
+            }
+        });
+
+        return coordinates;
+    }
+
+    parseGeoJSON(text) {
+        const data = JSON.parse(text);
+        const coordinates = [];
+
+        const extractCoordinates = (feature) => {
+            const geometry = feature.geometry || feature;
+            
+            if (geometry.type === 'LineString') {
+                geometry.coordinates.forEach(coord => {
+                    const [lng, lat, alt] = coord;
+                    if (!isNaN(lat) && !isNaN(lng)) {
+                        coordinates.push({ 
+                            lat, 
+                            lng, 
+                            altitude: alt || null,
+                            timestamp: feature.properties?.time || null
+                        });
+                    }
+                });
+            } else if (geometry.type === 'Point') {
+                const [lng, lat, alt] = geometry.coordinates;
+                if (!isNaN(lat) && !isNaN(lng)) {
+                    coordinates.push({ 
+                        lat, 
+                        lng, 
+                        altitude: alt || null,
+                        timestamp: feature.properties?.time || null
+                    });
+                }
+            } else if (geometry.type === 'MultiLineString') {
+                geometry.coordinates.forEach(line => {
+                    line.forEach(coord => {
+                        const [lng, lat, alt] = coord;
+                        if (!isNaN(lat) && !isNaN(lng)) {
+                            coordinates.push({ 
+                                lat, 
+                                lng, 
+                                altitude: alt || null
+                            });
+                        }
+                    });
+                });
+            }
+        };
+
+        if (data.type === 'FeatureCollection') {
+            data.features.forEach(extractCoordinates);
+        } else if (data.type === 'Feature') {
+            extractCoordinates(data);
+        } else if (data.geometry) {
+            extractCoordinates(data);
+        }
+
+        return coordinates;
+    }
+
+    parseGPX(text) {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(text, 'application/xml');
+        const coordinates = [];
+
+        // Look for track points
+        const trackPoints = doc.querySelectorAll('trkpt');
+        trackPoints.forEach(trkpt => {
+            const lat = parseFloat(trkpt.getAttribute('lat'));
+            const lng = parseFloat(trkpt.getAttribute('lon'));
+            
+            if (!isNaN(lat) && !isNaN(lng)) {
+                const eleElement = trkpt.querySelector('ele');
+                const timeElement = trkpt.querySelector('time');
+                
+                coordinates.push({
+                    lat,
+                    lng,
+                    altitude: eleElement ? parseFloat(eleElement.textContent) : null,
+                    timestamp: timeElement ? timeElement.textContent : null
+                });
+            }
+        });
+
+        // Also look for waypoints if no track points
+        if (coordinates.length === 0) {
+            const waypoints = doc.querySelectorAll('wpt');
+            waypoints.forEach(wpt => {
+                const lat = parseFloat(wpt.getAttribute('lat'));
+                const lng = parseFloat(wpt.getAttribute('lon'));
+                
+                if (!isNaN(lat) && !isNaN(lng)) {
+                    const eleElement = wpt.querySelector('ele');
+                    const timeElement = wpt.querySelector('time');
+                    
+                    coordinates.push({
+                        lat,
+                        lng,
+                        altitude: eleElement ? parseFloat(eleElement.textContent) : null,
+                        timestamp: timeElement ? timeElement.textContent : null
+                    });
+                }
+            });
+        }
+
+        return coordinates;
+    }
+
+    async displayFileInfo(fileName, pointCount) {
+        document.getElementById('fileName').textContent = fileName;
+        document.getElementById('pointCount').textContent = pointCount;
+        
+        // Calculate estimated duration
+        const defaultInterval = parseFloat(document.getElementById('defaultInterval').value);
+        const estimatedDuration = Math.round(pointCount * defaultInterval);
+        document.getElementById('routeDuration').textContent = `~${estimatedDuration}s`;
+        
+        document.getElementById('fileInfo').style.display = 'block';
+        document.getElementById('routeSettings').style.display = 'block';
+        
+        // Immediately apply the first route point as override
+        await this.applyInitialRouteOverride();
+    }
+
+    async applyInitialRouteOverride() {
+        if (!this.routeData || this.routeData.length === 0) return;
+        
+        try {
+            const firstPoint = this.routeData[0];
+            const defaultAccuracy = parseInt(document.getElementById('defaultAccuracy').value);
+            
+            const locationData = {
+                enabled: true,
+                latitude: firstPoint.lat,
+                longitude: firstPoint.lng,
+                accuracy: defaultAccuracy,
+                altitude: firstPoint.altitude,
+                altitudeAccuracy: firstPoint.altitude ? defaultAccuracy : null,
+                heading: null,
+                speed: null
+            };
+
+            await chrome.tabs.sendMessage(this.tabId, {
+                action: 'setLocationOverride',
+                data: locationData
+            });
+
+            // Show initial position in UI
+            this.updateCurrentPoint(firstPoint, 0);
+            this.updateProgress(0); // Start at 0% since simulation hasn't started
+            
+            // Show progress section but don't enable buttons yet
+            document.getElementById('routeProgress').style.display = 'block';
+            
+            this.showRouteStatus('✅ Route loaded! Location set to starting point. You can now start watching position.', 'success');
+            
+        } catch (error) {
+            console.error('Failed to apply initial route override:', error);
+            this.showRouteStatus('Route loaded but could not apply override. Try refreshing the page.', 'error');
+        }
+    }
+
+    async startRoute() {
+        if (!this.routeData || this.routeData.length === 0) {
+            this.showRouteStatus('Please upload a route file first', 'error');
+            return;
+        }
+
+        if (this.isPlaying && !this.isPaused) {
+            this.showRouteStatus('Route is already playing', 'info');
+            return;
+        }
+
+        this.isPlaying = true;
+        this.isPaused = false;
+        
+        if (this.currentIndex === 0) {
+            this.startTime = Date.now();
+            this.pausedTime = 0;
+            // Start from the first point since we want to simulate the entire route
+            this.currentIndex = 0;
+        } else {
+            // Resuming from pause
+            this.startTime += (Date.now() - this.pausedTime);
+        }
+
+        document.getElementById('startRouteBtn').disabled = true;
+        document.getElementById('pauseRouteBtn').disabled = false;
+        document.getElementById('stopRouteBtn').disabled = false;
+
+        this.showRouteStatus('🎬 Route simulation started', 'success');
+        
+        // Start simulation immediately
+        this.simulateRoute();
+    }
+
+    pauseRoute() {
+        if (!this.isPlaying || this.isPaused) return;
+
+        this.isPaused = true;
+        this.pausedTime = Date.now();
+        
+        if (this.intervalId) {
+            clearTimeout(this.intervalId);
+            this.intervalId = null;
+        }
+
+        document.getElementById('startRouteBtn').disabled = false;
+        document.getElementById('pauseRouteBtn').disabled = true;
+        
+        this.showRouteStatus('Route simulation paused', 'info');
+    }
+
+    stopRoute() {
+        this.isPlaying = false;
+        this.isPaused = false;
+        this.currentIndex = 0;
+        
+        if (this.intervalId) {
+            clearTimeout(this.intervalId);
+            this.intervalId = null;
+        }
+
+        document.getElementById('startRouteBtn').disabled = false;
+        document.getElementById('pauseRouteBtn').disabled = true;
+        document.getElementById('stopRouteBtn').disabled = true;
+        
+        // Reset to starting position
+        if (this.routeData && this.routeData.length > 0) {
+            this.updateCurrentPoint(this.routeData[0], 0);
+            this.updateProgress(0);
+            this.showRouteStatus('🔄 Route stopped. Position reset to start.', 'info');
+            
+            // Reapply the initial override to return to starting position
+            this.applyInitialRouteOverride();
+        } else {
+            this.updateProgress(0);
+            this.showRouteStatus('Route simulation stopped', 'info');
+            
+            // Clear any active override if no route data
+            try {
+                chrome.tabs.sendMessage(this.tabId, {
+                    action: 'clearLocationOverride'
+                });
+            } catch (error) {
+                console.error('Failed to clear override:', error);
+            }
+        }
+    }
+
+    completeRoute() {
+        // Similar to stopRoute but stays at final position instead of returning to start
+        this.isPlaying = false;
+        this.isPaused = false;
+        this.currentIndex = 0; // Reset for next run
+        
+        if (this.intervalId) {
+            clearTimeout(this.intervalId);
+            this.intervalId = null;
+        }
+
+        document.getElementById('startRouteBtn').disabled = false;
+        document.getElementById('pauseRouteBtn').disabled = true;
+        document.getElementById('stopRouteBtn').disabled = true;
+        
+        // Stay at final position (don't reset progress or location)
+        this.showRouteStatus('🏁 Route completed! Staying at final destination.', 'success');
+        
+        // Note: We intentionally don't reset to starting position or clear override
+        // The user stays at the final destination point
+    }
+
+    async simulateRoute() {
+        if (!this.isPlaying || this.isPaused || this.currentIndex >= this.routeData.length) {
+            if (this.currentIndex >= this.routeData.length) {
+                this.showRouteStatus('🏁 Route simulation completed!', 'success');
+                this.completeRoute();
+            }
+            return;
+        }
+
+        const point = this.routeData[this.currentIndex];
+        const playbackSpeed = parseFloat(document.getElementById('playbackSpeed').value);
+        const defaultInterval = parseFloat(document.getElementById('defaultInterval').value) * 1000; // Convert to ms
+        const defaultAccuracy = parseInt(document.getElementById('defaultAccuracy').value);
+
+        // Create location override data
+        const locationData = {
+            enabled: true,
+            latitude: point.lat,
+            longitude: point.lng,
+            accuracy: defaultAccuracy,
+            altitude: point.altitude,
+            altitudeAccuracy: point.altitude ? defaultAccuracy : null,
+            heading: null,
+            speed: null
+        };
+
+        try {
+            // Apply the location override
+            await chrome.tabs.sendMessage(this.tabId, {
+                action: 'setLocationOverride',
+                data: locationData
+            });
+
+            // Update UI
+            this.updateCurrentPoint(point, this.currentIndex);
+            this.updateProgress((this.currentIndex + 1) / this.routeData.length * 100);
+
+            this.currentIndex++;
+
+            // Calculate next interval
+            let nextInterval = defaultInterval / playbackSpeed;
+            
+            // If we have timestamps, try to use them
+            if (point.timestamp && this.currentIndex < this.routeData.length) {
+                const nextPoint = this.routeData[this.currentIndex];
+                if (nextPoint.timestamp) {
+                    const currentTime = new Date(point.timestamp).getTime();
+                    const nextTime = new Date(nextPoint.timestamp).getTime();
+                    const realInterval = nextTime - currentTime;
+                    
+                    if (realInterval > 0 && realInterval < 60000) { // Max 1 minute between points
+                        nextInterval = realInterval / playbackSpeed;
+                    }
+                }
+            }
+
+            // Schedule next point
+            this.intervalId = setTimeout(() => {
+                this.simulateRoute();
+            }, Math.max(100, nextInterval)); // Minimum 100ms interval
+
+        } catch (error) {
+            console.error('Failed to apply location override:', error);
+            this.showRouteStatus('Error applying location override', 'error');
+        }
+    }
+
+    updateCurrentPoint(point, index) {
+        document.getElementById('currentLat').textContent = point.lat.toFixed(6);
+        document.getElementById('currentLng').textContent = point.lng.toFixed(6);
+        document.getElementById('currentStep').textContent = index + 1;
+        document.getElementById('totalSteps').textContent = this.routeData.length;
+        document.getElementById('currentTime').textContent = point.timestamp || 'N/A';
+    }
+
+    updateProgress(percentage) {
+        document.getElementById('progressFill').style.width = `${percentage}%`;
+        document.getElementById('progressText').textContent = `${Math.round(percentage)}%`;
+    }
+
+    showRouteStatus(message, type = 'info') {
+        const statusDiv = document.getElementById('routeStatus');
+        statusDiv.textContent = message;
+        statusDiv.className = `status ${type}`;
+        
+        // Auto-hide after 3 seconds for non-error messages
+        // if (type !== 'error') {
+        //     setTimeout(() => {
+        //         statusDiv.textContent = '';
+        //         statusDiv.className = 'status';
+        //     }, 3000);
+        // }
     }
 }
 

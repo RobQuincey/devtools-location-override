@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gpx version="1.1" creator="Test">
+  <trk>
+    <name>Sample Track</name>
+    <trkseg>
+      <trkpt lat="37.7749" lon="-122.4194">
+        <ele>0</ele>
+        <time>2024-01-01T12:00:00Z</time>
+      </trkpt>
+      <trkpt lat="37.7759" lon="-122.4184">
+        <ele>5</ele>
+        <time>2024-01-01T12:01:00Z</time>
+      </trkpt>
+      <trkpt lat="37.7769" lon="-122.4174">
+        <ele>10</ele>
+        <time>2024-01-01T12:02:00Z</time>
+      </trkpt>
+      <trkpt lat="37.7779" lon="-122.4164">
+        <ele>15</ele>
+        <time>2024-01-01T12:03:00Z</time>
+      </trkpt>
+      <trkpt lat="37.7789" lon="-122.4154">
+        <ele>20</ele>
+        <time>2024-01-01T12:04:00Z</time>
+      </trkpt>
+    </trkseg>
+  </trk>
+</gpx>

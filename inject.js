@@ -2,6 +2,12 @@
 (function() {
     'use strict';
 
+    // Guard to prevent multiple executions
+    if (window.locationOverrideInjected) {
+        return;
+    }
+    window.locationOverrideInjected = true;
+
     let locationOverride = null;
     let isOverrideActive = false;
 
