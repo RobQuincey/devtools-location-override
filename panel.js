@@ -18,7 +18,7 @@ class LocationOverridePanel {
         });
 
         // Input changes
-        ['latitude', 'longitude', 'accuracy'].forEach(id => {
+        ['latitude', 'longitude', 'accuracy', 'heading', 'speed', 'altitude', 'altitudeAccuracy'].forEach(id => {
             document.getElementById(id).addEventListener('input', () => {
                 this.validateInputs();
             });
@@ -61,6 +61,9 @@ class LocationOverridePanel {
                 document.getElementById('longitude').value = settings.longitude || -122.4194;
                 document.getElementById('accuracy').value = settings.accuracy || 10;
                 document.getElementById('heading').value = settings.heading || null;
+                document.getElementById('speed').value = settings.speed || null;
+                document.getElementById('altitude').value = settings.altitude || null;
+                document.getElementById('altitudeAccuracy').value = settings.altitudeAccuracy || null;
 
                 this.updateUI();
                 this.updateCurrentLocation();
@@ -75,7 +78,11 @@ class LocationOverridePanel {
             enabled: document.getElementById('enableOverride').checked,
             latitude: parseFloat(document.getElementById('latitude').value) || 0,
             longitude: parseFloat(document.getElementById('longitude').value) || 0,
-            accuracy: parseInt(document.getElementById('accuracy').value) || 10
+            accuracy: parseInt(document.getElementById('accuracy').value) || 10,
+            heading: parseFloat(document.getElementById('heading').value) || null,
+            speed: parseFloat(document.getElementById('speed').value) || null,
+            altitude: parseFloat(document.getElementById('altitude').value) || null,
+            altitudeAccuracy: parseFloat(document.getElementById('altitudeAccuracy').value) || null
         };
 
         try {
@@ -105,6 +112,9 @@ class LocationOverridePanel {
         const lng = parseFloat(document.getElementById('longitude').value);
         const acc = parseInt(document.getElementById('accuracy').value);
         const heading = parseFloat(document.getElementById('heading').value) || null;
+        const speed = parseFloat(document.getElementById('speed').value) || null;
+        const altitude = parseFloat(document.getElementById('altitude').value) || null;
+        const altitudeAccuracy = parseFloat(document.getElementById('altitudeAccuracy').value) || null;
 
         let isValid = true;
         let errors = [];
@@ -113,19 +123,28 @@ class LocationOverridePanel {
             errors.push('Latitude must be between -90 and 90');
             isValid = false;
         }
-
         if (isNaN(lng) || lng < -180 || lng > 180) {
             errors.push('Longitude must be between -180 and 180');
             isValid = false;
         }
-
         if (isNaN(acc) || acc < 1) {
             errors.push('Accuracy must be at least 1 metre');
             isValid = false;
         }
-        
         if (heading !== null && (isNaN(heading) || heading < 0 || heading > 360)) {
             errors.push('Heading must be between 0 and 360 degrees, or not set');
+            isValid = false;
+        }
+        if (speed !== null && (isNaN(speed) || speed < 0)) {
+            errors.push('Speed must be a non-negative number, or not set');
+            isValid = false;
+        }
+        if (altitude !== null && (isNaN(altitude))) {
+            errors.push('Altitude must be a number, or not set');
+            isValid = false;
+        }
+        if (altitudeAccuracy !== null && (isNaN(altitudeAccuracy) || altitudeAccuracy < 0)) {
+            errors.push('Altitude Accuracy must be a non-negative number, or not set');
             isValid = false;
         }
 
@@ -155,7 +174,10 @@ class LocationOverridePanel {
             latitude: parseFloat(document.getElementById('latitude').value),
             longitude: parseFloat(document.getElementById('longitude').value),
             accuracy: parseInt(document.getElementById('accuracy').value),
-            heading: parseFloat(document.getElementById('heading').value) || null
+            heading: parseFloat(document.getElementById('heading').value) || null,
+            speed: parseFloat(document.getElementById('speed').value) || null,
+            altitude: parseFloat(document.getElementById('altitude').value) || null,
+            altitudeAccuracy: parseFloat(document.getElementById('altitudeAccuracy').value) || null
         };
 
         try {
@@ -214,13 +236,19 @@ class LocationOverridePanel {
             const lng = document.getElementById('longitude').value;
             const acc = document.getElementById('accuracy').value;
             const heading = document.getElementById('heading').value || 'N/A';
-            
+            const speed = document.getElementById('speed').value || 'N/A';
+            const altitude = document.getElementById('altitude').value || 'N/A';
+            const altitudeAccuracy = document.getElementById('altitudeAccuracy').value || 'N/A';
+
             currentLocationDiv.innerHTML = `
                 <p><strong>Override Active:</strong></p>
                 <p>Latitude: ${lat}°</p>
                 <p>Longitude: ${lng}°</p>
                 <p>Accuracy: ${acc} meters</p>
                 <p>Heading: ${heading}°</p>
+                <p>Speed: ${speed} m/s</p>
+                <p>Altitude: ${altitude} m</p>
+                <p>Altitude Accuracy: ${altitudeAccuracy} m</p>
             `;
         } else {
             currentLocationDiv.innerHTML = '<p>No override active</p>';

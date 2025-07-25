@@ -23,10 +23,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/yourusername/devtools-location-override.git"
+    "url": "https://github.com/RobQuincey/devtools-location-override.git"
   },
   "bugs": {
-    "url": "https://github.com/yourusername/devtools-location-override/issues"
+    "url": "https://github.com/RobQuincey/devtools-location-override/issues"
   },
-  "homepage": "https://github.com/yourusername/devtools-location-override#readme"
+  "homepage": "https://github.com/RobQuincey/devtools-location-override#readme"
 }

@@ -43,9 +43,28 @@
 
                 <div class="input-group">
                     <label for="heading">Heading (degrees):</label>
-                    <input type="number" id="heading" min="0" placeholder="e.g., 180" value="360">
+                    <input type="number" id="heading" min="0" placeholder="e.g., 180" value="">
                     <small>Range: 0 - 360</small>
                 </div>
+
+                <div class="input-group">
+                    <label for="speed">Speed (meters/second):</label>
+                    <input type="number" id="speed" min="0" placeholder="e.g., 10" value="">
+                    <small>Minimum: 0 meters/second</small>
+                </div>
+
+                <div class="input-group">
+                    <label for="altitude">Altitude (meters):</label>
+                    <input type="number" id="altitude" placeholder="e.g., 100" value="">
+                    <small>Minimum: 0 meters</small>
+                </div>
+
+                <div class="input-group">
+                    <label for="altitudeAccuracy">Altitude Accuracy (meters):</label>
+                    <input type="number" id="altitudeAccuracy" min="0" placeholder="e.g., 10" value="">
+                    <small>Minimum: 0 meters</small>
+                </div>
+
                 <div class="preset-section">
                     <label>Quick Presets:</label>
                     <div class="preset-buttons">

@@ -164,9 +164,22 @@
                 <div class="coord-value" id="heading">-</div>
             </div>
             <div class="coord-item">
+                <div class="coord-label">Speed</div>
+                <div class="coord-value" id="speed">-</div>
+            </div>
+            <div class="coord-item">
+                <div class="coord-label">Altitude</div>
+                <div class="coord-value" id="altitude">-</div>
+            </div>
+            <div class="coord-item">
+                <div class="coord-label">Altitude Accuracy</div>
+                <div class="coord-value" id="altitudeAccuracy">-</div>
+            </div>
+            <div class="coord-item">
                 <div class="coord-label">Timestamp</div>
                 <div class="coord-value" id="time">-</div>
             </div>
+
         </div>
 
         <div id="output" class="output"></div>
@@ -194,6 +207,9 @@
             document.getElementById('acc').textContent = `${position.coords.accuracy} m`;
             document.getElementById('time').textContent = new Date(position.timestamp).toLocaleTimeString();
             document.getElementById('heading').textContent = position.coords.heading === undefined ? `Not supplied` : `${position.coords.heading} °`;
+            document.getElementById('speed').textContent = position.coords.speed === null ? `Not supplied` : `${position.coords.speed} m/s`;
+            document.getElementById('altitude').textContent = position.coords.altitude === null ? `Not supplied` : `${position.coords.altitude} m`;
+            document.getElementById('altitudeAccuracy').textContent = position.coords.altitudeAccuracy === null ? `Not supplied` : `${position.coords.altitudeAccuracy} m`;
             coordinates.style.display = 'grid';
         }
 
@@ -214,6 +230,9 @@
                     log(`Longitude: ${position.coords.longitude}`);
                     log(`Accuracy: ${position.coords.accuracy} meters`);
                     log(`Heading: ${position.coords.heading === undefined ? `Not supplied` : `${position.coords.heading} °`}`);
+                    log(`Speed: ${position.coords.speed === null ? `Not supplied` : `${position.coords.speed} m/s`}`);
+                    log(`Altitude: ${position.coords.altitude === null ? `Not supplied` : `${position.coords.altitude} m`}`);
+                    log(`Altitude Accuracy: ${position.coords.altitudeAccuracy === null ? `Not supplied` : `${position.coords.altitudeAccuracy} m`}`);
                     log(`Timestamp: ${new Date(position.timestamp).toLocaleString()}`);
                     log('---');
 
@@ -258,6 +277,9 @@
                     log(`Longitude: ${position.coords.longitude}`);
                     log(`Accuracy: ${position.coords.accuracy} meters`);
                     log(`Heading: ${position.coords.heading === undefined ? `Not supplied` : `${position.coords.heading} °`}`);
+                    log(`Speed: ${position.coords.speed === null ? `Not supplied` : `${position.coords.speed} m/s`}`);
+                    log(`Altitude: ${position.coords.altitude === null ? `Not supplied` : `${position.coords.altitude} m`}`);
+                    log(`Altitude Accuracy: ${position.coords.altitudeAccuracy === null ? `Not supplied` : `${position.coords.altitudeAccuracy} m`}`);
                     log(`Timestamp: ${new Date(position.timestamp).toLocaleString()}`);
                     log('---');
 

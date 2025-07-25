@@ -14,16 +14,16 @@
     const activeWatches = new Map();
 
     // Create a mock position object
-    function createMockPosition(lat, lng, accuracy, heading) {
+    function createMockPosition(lat, lng, accuracy, heading, speed, altitude, altitudeAccuracy) {
         return {
             coords: {
                 latitude: lat,
                 longitude: lng,
-                altitude: null,
+                altitude: altitude,
                 accuracy: accuracy,
-                altitudeAccuracy: null,
+                altitudeAccuracy: altitudeAccuracy,
                 heading: heading,
-                speed: null
+                speed: speed
             },
             timestamp: Date.now()
         };
@@ -40,7 +40,10 @@
                     locationOverride.latitude,
                     locationOverride.longitude,
                     locationOverride.accuracy,
-                    locationOverride.heading || null
+                    locationOverride.heading || null,
+                    locationOverride.speed || null,
+                    locationOverride.altitude || null,
+                    locationOverride.altitudeAccuracy || null
                 );
                 successCallback(position);
             }, 10);
@@ -79,7 +82,10 @@
                         locationOverride.latitude,
                         locationOverride.longitude,
                         locationOverride.accuracy,
-                        locationOverride.heading || null
+                        locationOverride.heading || null,
+                        locationOverride.speed || null,
+                        locationOverride.altitude || null,
+                        locationOverride.altitudeAccuracy || null
                     );
                     successCallback(position);
                 }
@@ -92,7 +98,10 @@
                         locationOverride.latitude,
                         locationOverride.longitude,
                         locationOverride.accuracy,
-                        locationOverride.heading || null
+                        locationOverride.heading || null,
+                        locationOverride.speed || null,
+                        locationOverride.altitude || null,
+                        locationOverride.altitudeAccuracy || null
                     );
                     successCallback(position);
                 }
@@ -151,7 +160,10 @@
                     locationOverride.latitude,
                     locationOverride.longitude,
                     locationOverride.accuracy,
-                    locationOverride.heading || null
+                    locationOverride.heading || null,
+                    locationOverride.speed || null,
+                    locationOverride.altitude || null,
+                    locationOverride.altitudeAccuracy || null
                 );
                 watchInfo.successCallback(position);
             });
