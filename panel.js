@@ -10,6 +10,7 @@ class LocationOverridePanel {
         this.bindEvents();
         this.loadSettings();
         this.loadPresets();
+        this.loadAdvancedOptionsState();
         this.updateUI();
     }
 
@@ -35,6 +36,9 @@ class LocationOverridePanel {
 
         // Preset management
         this.bindPresetEvents();
+
+        // Advanced options
+        this.bindAdvancedOptionsEvents();
 
         // Action buttons
         document.getElementById('applyBtn').addEventListener('click', () => {
@@ -77,6 +81,37 @@ class LocationOverridePanel {
                 this.hidePresetControls();
             }
         });
+    }
+
+    bindAdvancedOptionsEvents() {
+        const advancedOptions = document.getElementById('advancedOptions');
+        
+        // Save the state when toggled
+        advancedOptions.addEventListener('toggle', () => {
+            this.saveAdvancedOptionsState(advancedOptions.open);
+        });
+    }
+
+    async loadAdvancedOptionsState() {
+        try {
+            const result = await chrome.storage.local.get(['advancedOptionsOpen']);
+            const isOpen = result.advancedOptionsOpen;
+            
+            if (isOpen !== undefined) {
+                const advancedOptions = document.getElementById('advancedOptions');
+                advancedOptions.open = isOpen;
+            }
+        } catch (error) {
+            console.error('Failed to load advanced options state:', error);
+        }
+    }
+
+    async saveAdvancedOptionsState(isOpen) {
+        try {
+            await chrome.storage.local.set({ advancedOptionsOpen: isOpen });
+        } catch (error) {
+            console.error('Failed to save advanced options state:', error);
+        }
     }
 
     async loadPresets() {
@@ -458,7 +493,7 @@ class LocationOverridePanel {
                 <p><strong>Override Active:</strong></p>
                 <p>Latitude: ${lat}°</p>
                 <p>Longitude: ${lng}°</p>
-                <p>Accuracy: ${acc} meters</p>
+                <p>Accuracy: ${acc} metres</p>
                 <p>Heading: ${heading}°</p>
                 <p>Speed: ${speed} m/s</p>
                 <p>Altitude: ${altitude} m</p>

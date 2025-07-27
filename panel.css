@@ -22,7 +22,7 @@
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     margin: 0;
-    padding: 20px;
+    padding: 0;
     background: var(--bg-secondary);
     color: var(--text-primary);
     font-size: 14px;
@@ -36,17 +36,7 @@ body {
     border-radius: var(--border-radius);
     box-shadow: var(--shadow);
     overflow: hidden;
-}
-
-.header {
-    background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
-    color: white;
-    padding: 24px;
-    text-align: center;
-}
-
-.header .icon{
-    width: 3.5rem;
+    margin-top: 20px;
 }
 
 /* Tabs */
@@ -86,17 +76,6 @@ body {
 
 .tab-content.active {
     display: block;
-}
-.header h1 {
-    margin: 0 0 8px 0;
-    font-size: 24px;
-    font-weight: 600;
-}
-
-.header p {
-    margin: 0;
-    opacity: 0.9;
-    font-size: 16px;
 }
 
 .controls {
@@ -192,6 +171,44 @@ body {
     margin-top: 4px;
     color: var(--text-secondary);
     font-size: 12px;
+}
+
+.advanced-options {
+    margin: 16px 0;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+}
+
+.advanced-options summary {
+    padding: 12px 16px;
+    background: var(--bg-secondary);
+    cursor: pointer;
+    user-select: none;
+    font-weight: 500;
+    border-bottom: 1px solid var(--border-color);
+    transition: var(--transition);
+}
+
+.advanced-options summary:hover {
+    background: #f1f3f4;
+}
+
+.advanced-options[open] summary {
+    border-bottom: 1px solid var(--border-color);
+}
+
+.advanced-content {
+    padding: 16px;
+    background: var(--bg-primary);
+}
+
+.advanced-content .input-group {
+    margin-bottom: 16px;
+}
+
+.advanced-content .input-group:last-child {
+    margin-bottom: 0;
 }
 
 .preset-section {
@@ -477,10 +494,6 @@ body {
 @media (max-width: 480px) {
     body {
         padding: 12px;
-    }
-    
-    .header {
-        padding: 20px;
     }
     
     .controls {

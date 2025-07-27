@@ -34,7 +34,7 @@
    - Set your desired coordinates:
      - Latitude: -90 to 90
      - Longitude: -180 to 180  
-     - Accuracy: minimum 1 meter
+     - Accuracy: minimum 1 metre
    - Or use one of the preset city locations
 
 4. **Apply Override**
