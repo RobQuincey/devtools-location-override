@@ -204,6 +204,18 @@ body {
     font-weight: 500;
 }
 
+.clear-link {
+    color: var(--danger-color);
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: normal;
+    margin-left: 8px;
+}
+
+.clear-link:hover {
+    text-decoration: underline;
+}
+
 .preset-buttons {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
@@ -222,11 +234,90 @@ body {
     font-weight: 500;
 }
 
+.preset-btn.add-preset {
+    border-style: dashed;
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+    font-weight: 500;
+}
+
+.preset-btn.add-preset:hover {
+    background: var(--primary-color);
+    color: white;
+}
+
 .preset-btn:hover {
     border-color: var(--primary-color);
     background: var(--primary-color);
     color: white;
     transform: translateY(-1px);
+}
+
+.preset-btn .delete-preset {
+    margin-left: 8px;
+    font-size: 11px;
+    opacity: 0.7;
+}
+
+.preset-btn:hover .delete-preset {
+    opacity: 1;
+}
+
+.preset-management {
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border-color);
+}
+
+.preset-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.save-preset-btn, .cancel-preset-btn {
+    flex: 1;
+    padding: 10px 12px;
+    border: none;
+    border-radius: var(--border-radius);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.save-preset-btn {
+    background: var(--success-color);
+    color: white;
+}
+
+.save-preset-btn:hover {
+    background: #2d8f47;
+    transform: translateY(-1px);
+}
+
+.save-preset-btn:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.cancel-preset-btn {
+    background: var(--text-secondary);
+    color: white;
+}
+
+.cancel-preset-btn:hover {
+    background: #3c4043;
+    transform: translateY(-1px);
+}
+
+.no-presets {
+    text-align: center;
+    color: var(--text-secondary);
+    font-style: italic;
+    margin: 8px 0;
+    font-size: 13px;
 }
 
 .action-buttons {

@@ -9,6 +9,7 @@ class LocationOverridePanel {
     init() {
         this.bindEvents();
         this.loadSettings();
+        this.loadPresets();
         this.updateUI();
     }
 
@@ -32,21 +33,8 @@ class LocationOverridePanel {
             });
         });
 
-        // Preset buttons
-        document.querySelectorAll('.preset-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const lat = btn.dataset.lat;
-                const lng = btn.dataset.lng;
-                const acc = btn.dataset.acc;
-                
-                document.getElementById('latitude').value = lat;
-                document.getElementById('longitude').value = lng;
-                document.getElementById('accuracy').value = acc;
-                
-                this.validateInputs();
-                this.showStatus('Preset location loaded', 'info');
-            });
-        });
+        // Preset management
+        this.bindPresetEvents();
 
         // Action buttons
         document.getElementById('applyBtn').addEventListener('click', () => {
@@ -56,6 +44,210 @@ class LocationOverridePanel {
         document.getElementById('clearBtn').addEventListener('click', () => {
             this.clearOverride();
         });
+    }
+
+    bindPresetEvents() {
+        // Save preset button
+        document.getElementById('savePresetBtn').addEventListener('click', () => {
+            this.saveCurrentAsPreset();
+        });
+
+        // Cancel preset button
+        document.getElementById('cancelPresetBtn').addEventListener('click', () => {
+            this.hidePresetControls();
+        });
+
+        // Clear all presets link
+        document.getElementById('clearPresetsLink').addEventListener('click', (e) => {
+            e.preventDefault();
+            this.clearAllPresets();
+        });
+
+        // Preset name input - enable/disable save button based on content
+        document.getElementById('presetName').addEventListener('input', (e) => {
+            const saveBtn = document.getElementById('savePresetBtn');
+            saveBtn.disabled = !e.target.value.trim();
+        });
+
+        // Enable save button when Enter is pressed in preset name input
+        document.getElementById('presetName').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && e.target.value.trim()) {
+                this.saveCurrentAsPreset();
+            } else if (e.key === 'Escape') {
+                this.hidePresetControls();
+            }
+        });
+    }
+
+    async loadPresets() {
+        try {
+            const result = await chrome.storage.local.get(['userPresets']);
+            const presets = result.userPresets || [];
+            this.displayPresets(presets);
+        } catch (error) {
+            console.error('Failed to load presets:', error);
+        }
+    }
+
+    displayPresets(presets) {
+        const container = document.getElementById('presetButtons');
+        container.innerHTML = '';
+
+        // Add existing presets
+        presets.forEach((preset, index) => {
+            const button = document.createElement('button');
+            button.className = 'preset-btn';
+            button.innerHTML = `
+                📍 ${preset.name}
+                <span class="delete-preset">✕</span>
+            `;
+            
+            // Load preset on button click (but not on delete button)
+            button.addEventListener('click', (e) => {
+                if (!e.target.classList.contains('delete-preset')) {
+                    this.loadPreset(preset);
+                }
+            });
+
+            // Delete preset on X click
+            button.querySelector('.delete-preset').addEventListener('click', (e) => {
+                e.stopPropagation();
+                this.deletePreset(index);
+            });
+
+            container.appendChild(button);
+        });
+
+        // Add "Add preset" button
+        const addButton = document.createElement('button');
+        addButton.className = 'preset-btn add-preset';
+        addButton.innerHTML = '+ Add preset';
+        addButton.addEventListener('click', () => {
+            this.showPresetControls();
+        });
+        container.appendChild(addButton);
+    }
+
+    loadPreset(preset) {
+        document.getElementById('latitude').value = preset.latitude;
+        document.getElementById('longitude').value = preset.longitude;
+        document.getElementById('accuracy').value = preset.accuracy;
+        document.getElementById('heading').value = preset.heading || '';
+        document.getElementById('speed').value = preset.speed || '';
+        document.getElementById('altitude').value = preset.altitude || '';
+        document.getElementById('altitudeAccuracy').value = preset.altitudeAccuracy || '';
+
+        this.validateInputs();
+        this.showStatus(`Preset "${preset.name}" loaded`, 'info');
+    }
+
+    showPresetControls() {
+        const presetManagement = document.getElementById('presetManagement');
+        const presetNameInput = document.getElementById('presetName');
+        const saveBtn = document.getElementById('savePresetBtn');
+        
+        presetManagement.style.display = 'block';
+        presetNameInput.value = '';
+        presetNameInput.focus();
+        saveBtn.disabled = true;
+    }
+
+    hidePresetControls() {
+        const presetManagement = document.getElementById('presetManagement');
+        const presetNameInput = document.getElementById('presetName');
+        const saveBtn = document.getElementById('savePresetBtn');
+        
+        presetManagement.style.display = 'none';
+        presetNameInput.value = '';
+        saveBtn.disabled = true;
+    }
+
+    async saveCurrentAsPreset() {
+        const presetName = document.getElementById('presetName').value.trim();
+        if (!presetName) {
+            this.showStatus('Please enter a preset name', 'error');
+            return;
+        }
+
+        if (!this.validateInputs()) {
+            this.showStatus('Please fix validation errors before saving preset', 'error');
+            return;
+        }
+
+        const preset = {
+            name: presetName,
+            latitude: parseFloat(document.getElementById('latitude').value),
+            longitude: parseFloat(document.getElementById('longitude').value),
+            accuracy: parseInt(document.getElementById('accuracy').value),
+            heading: parseFloat(document.getElementById('heading').value) || null,
+            speed: parseFloat(document.getElementById('speed').value) || null,
+            altitude: parseFloat(document.getElementById('altitude').value) || null,
+            altitudeAccuracy: parseFloat(document.getElementById('altitudeAccuracy').value) || null,
+            createdAt: new Date().toISOString()
+        };
+
+        try {
+            const result = await chrome.storage.local.get(['userPresets']);
+            const presets = result.userPresets || [];
+            
+            // Check for duplicate names
+            const existingIndex = presets.findIndex(p => p.name === presetName);
+            if (existingIndex !== -1) {
+                if (!confirm(`A preset named "${presetName}" already exists. Replace it?`)) {
+                    return;
+                }
+                presets[existingIndex] = preset;
+            } else {
+                presets.push(preset);
+            }
+
+            await chrome.storage.local.set({ userPresets: presets });
+            
+            // Hide controls and reload presets
+            this.hidePresetControls();
+            
+            this.displayPresets(presets);
+            this.showStatus(`Preset "${presetName}" saved successfully!`, 'success');
+            
+        } catch (error) {
+            console.error('Failed to save preset:', error);
+            this.showStatus('Failed to save preset', 'error');
+        }
+    }
+
+    async deletePreset(index) {
+        try {
+            const result = await chrome.storage.local.get(['userPresets']);
+            const presets = result.userPresets || [];
+            
+            if (index >= 0 && index < presets.length) {
+                const presetName = presets[index].name;
+                
+                if (confirm(`Delete preset "${presetName}"?`)) {
+                    presets.splice(index, 1);
+                    await chrome.storage.local.set({ userPresets: presets });
+                    
+                    this.displayPresets(presets);
+                    this.showStatus(`Preset "${presetName}" deleted`, 'info');
+                }
+            }
+        } catch (error) {
+            console.error('Failed to delete preset:', error);
+            this.showStatus('Failed to delete preset', 'error');
+        }
+    }
+
+    async clearAllPresets() {
+        if (confirm('Delete all saved presets? This cannot be undone.')) {
+            try {
+                await chrome.storage.local.set({ userPresets: [] });
+                this.displayPresets([]);
+                this.showStatus('All presets cleared', 'info');
+            } catch (error) {
+                console.error('Failed to clear presets:', error);
+                this.showStatus('Failed to clear presets', 'error');
+            }
+        }
     }
 
     switchTab(tabName) {

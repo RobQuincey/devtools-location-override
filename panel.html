@@ -71,30 +71,25 @@
                     <small>Minimum: 0 meters</small>
                 </div>
 
-                <div class="preset-section">
-                    <label>Quick Presets:</label>
-                    <div class="preset-buttons">
-                        <button class="preset-btn" data-lat="37.7749" data-lng="-122.4194" data-acc="10">
-                            📍 San Francisco
-                        </button>
-                        <button class="preset-btn" data-lat="40.7128" data-lng="-74.0060" data-acc="10">
-                            🗽 New York
-                        </button>
-                        <button class="preset-btn" data-lat="51.5074" data-lng="-0.1278" data-acc="10">
-                            🏰 London
-                        </button>
-                        <button class="preset-btn" data-lat="35.6762" data-lng="139.6503" data-acc="10">
-                            🗾 Tokyo
-                        </button>
-                        <button class="preset-btn" data-lat="-33.8688" data-lng="151.2093" data-acc="10">
-                            🇦🇺 Sydney
-                        </button>
-                    </div>
-                </div>
-
                 <div class="action-buttons">
                     <button id="applyBtn" class="apply-btn">Apply Override</button>
                     <button id="clearBtn" class="clear-btn">Clear Override</button>
+                </div>
+
+                <div class="preset-section">
+                    <label>Your presets: <a href="#" id="clearPresetsLink" class="clear-link">clear all</a></label>
+                    <div class="preset-buttons" id="presetButtons">
+                        <!-- User presets will be dynamically loaded here -->
+                    </div>
+                    <div class="preset-management" id="presetManagement" style="display: none;">
+                        <div class="input-group">
+                            <input type="text" id="presetName" placeholder="Enter preset name..." maxlength="30">
+                        </div>
+                        <div class="preset-actions">
+                            <button id="savePresetBtn" class="save-preset-btn">💾 Save</button>
+                            <button id="cancelPresetBtn" class="cancel-preset-btn">Cancel</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
