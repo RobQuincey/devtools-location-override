@@ -132,8 +132,11 @@ class LocationOverridePanel {
         presets.forEach((preset, index) => {
             const button = document.createElement('button');
             button.className = 'preset-btn';
+            
+            // Sanitize preset name to prevent XSS
+            const safeName = this.sanitizeText(preset.name);
             button.innerHTML = `
-                📍 ${preset.name}
+                📍 ${safeName}
                 <span class="delete-preset">✕</span>
             `;
             
@@ -156,11 +159,22 @@ class LocationOverridePanel {
         // Add "Add preset" button
         const addButton = document.createElement('button');
         addButton.className = 'preset-btn add-preset';
-        addButton.innerHTML = '+ Add preset';
+        addButton.textContent = '+ Add preset';
         addButton.addEventListener('click', () => {
             this.showPresetControls();
         });
         container.appendChild(addButton);
+    }
+
+    /**
+     * Sanitize text content to prevent XSS attacks
+     * @param {string} text - Text to sanitize
+     * @returns {string} - Sanitized text
+     */
+    sanitizeText(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
     }
 
     loadPreset(preset) {
@@ -204,6 +218,17 @@ class LocationOverridePanel {
             return;
         }
 
+        // Validate preset name length and characters
+        if (presetName.length > 30) {
+            this.showStatus('Preset name must be 30 characters or less', 'error');
+            return;
+        }
+
+        if (!/^[a-zA-Z0-9\s\-_]+$/.test(presetName)) {
+            this.showStatus('Preset name can only contain letters, numbers, spaces, hyphens, and underscores', 'error');
+            return;
+        }
+
         if (!this.validateInputs()) {
             this.showStatus('Please fix validation errors before saving preset', 'error');
             return;
@@ -224,6 +249,12 @@ class LocationOverridePanel {
         try {
             const result = await chrome.storage.local.get(['userPresets']);
             const presets = result.userPresets || [];
+            
+            // Limit number of presets to prevent storage abuse
+            if (presets.length >= 20) {
+                this.showStatus('Maximum of 20 presets allowed. Please delete some presets first.', 'error');
+                return;
+            }
             
             // Check for duplicate names
             const existingIndex = presets.findIndex(p => p.name === presetName);
@@ -246,7 +277,7 @@ class LocationOverridePanel {
             
         } catch (error) {
             console.error('Failed to save preset:', error);
-            this.showStatus('Failed to save preset', 'error');
+            this.showStatus('Failed to save preset - storage may be full', 'error');
         }
     }
 
@@ -481,24 +512,36 @@ class LocationOverridePanel {
         const currentLocationDiv = document.getElementById('currentLocation');
         
         if (enabled) {
-            const lat = document.getElementById('latitude').value;
-            const lng = document.getElementById('longitude').value;
-            const acc = document.getElementById('accuracy').value;
-            const heading = document.getElementById('heading').value || 'N/A';
-            const speed = document.getElementById('speed').value || 'N/A';
-            const altitude = document.getElementById('altitude').value || 'N/A';
-            const altitudeAccuracy = document.getElementById('altitudeAccuracy').value || 'N/A';
+            const lat = parseFloat(document.getElementById('latitude').value) || 0;
+            const lng = parseFloat(document.getElementById('longitude').value) || 0;
+            const acc = parseInt(document.getElementById('accuracy').value) || 0;
+            const heading = parseFloat(document.getElementById('heading').value) || null;
+            const speed = parseFloat(document.getElementById('speed').value) || null;
+            const altitude = parseFloat(document.getElementById('altitude').value) || null;
+            const altitudeAccuracy = parseFloat(document.getElementById('altitudeAccuracy').value) || null;
 
-            currentLocationDiv.innerHTML = `
-                <p><strong>Override Active:</strong></p>
-                <p>Latitude: ${lat}°</p>
-                <p>Longitude: ${lng}°</p>
-                <p>Accuracy: ${acc} metres</p>
-                <p>Heading: ${heading}°</p>
-                <p>Speed: ${speed} m/s</p>
-                <p>Altitude: ${altitude} m</p>
-                <p>Altitude Accuracy: ${altitudeAccuracy} m</p>
-            `;
+            // Create safe display text
+            const overrideInfo = document.createElement('div');
+            overrideInfo.innerHTML = '<p><strong>Override Active:</strong></p>';
+            
+            const details = [
+                `Latitude: ${lat.toFixed(6)}°`,
+                `Longitude: ${lng.toFixed(6)}°`,
+                `Accuracy: ${acc} metres`,
+                `Heading: ${heading !== null ? heading + '°' : 'N/A'}`,
+                `Speed: ${speed !== null ? speed + ' m/s' : 'N/A'}`,
+                `Altitude: ${altitude !== null ? altitude + ' m' : 'N/A'}`,
+                `Altitude Accuracy: ${altitudeAccuracy !== null ? altitudeAccuracy + ' m' : 'N/A'}`
+            ];
+
+            details.forEach(detail => {
+                const p = document.createElement('p');
+                p.textContent = detail;
+                overrideInfo.appendChild(p);
+            });
+
+            currentLocationDiv.innerHTML = '';
+            currentLocationDiv.appendChild(overrideInfo);
         } else {
             currentLocationDiv.innerHTML = '<p>No override active</p>';
         }
@@ -816,9 +859,28 @@ class RouteSimulation {
     async handleFileUpload(file) {
         if (!file) return;
 
+        // Validate file size (max 5MB)
+        const maxSize = 5 * 1024 * 1024; // 5MB
+        if (file.size > maxSize) {
+            this.showRouteStatus('File is too large. Maximum size is 5MB.', 'error');
+            return;
+        }
+
+        // Validate file type
+        const extension = file.name.split('.').pop().toLowerCase();
+        const allowedTypes = ['kml', 'geojson', 'json', 'gpx'];
+        if (!allowedTypes.includes(extension)) {
+            this.showRouteStatus('Unsupported file format. Please use KML, GeoJSON, or GPX files.', 'error');
+            return;
+        }
+
         try {
             const text = await this.readFileAsText(file);
-            const extension = file.name.split('.').pop().toLowerCase();
+            
+            // Validate file content is not empty
+            if (!text.trim()) {
+                throw new Error('File appears to be empty');
+            }
             
             let routeData;
             switch (extension) {
@@ -840,12 +902,24 @@ class RouteSimulation {
                 throw new Error('No valid coordinates found in file');
             }
 
+            // Limit number of points to prevent performance issues
+            if (routeData.length > 10000) {
+                this.showRouteStatus(`Route has ${routeData.length} points. Using first 10,000 points to maintain performance.`, 'info');
+                routeData = routeData.slice(0, 10000);
+            }
+
             this.routeData = routeData;
             await this.displayFileInfo(file.name, routeData.length);
 
         } catch (error) {
             console.error('File parsing error:', error);
             this.showRouteStatus(`Error loading file: ${error.message}`, 'error');
+            
+            // Clear any previously loaded route data
+            this.routeData = null;
+            document.getElementById('fileInfo').style.display = 'none';
+            document.getElementById('routeSettings').style.display = 'none';
+            document.getElementById('routeProgress').style.display = 'none';
         }
     }
 

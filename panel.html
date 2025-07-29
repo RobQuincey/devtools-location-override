@@ -2,6 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self'; object-src 'self'">
     <title>Location Override Panel</title>
     <link rel="stylesheet" href="panel.css">
 </head>
@@ -313,6 +314,30 @@
                 </div>
 
 
+            </div>
+
+            <div class="help-section">
+                <details>
+                    <summary>📖 Help & Usage</summary>
+                    <div class="help-content">
+                        <h4>How to use:</h4>
+                        <ol>
+                            <li>Add a valid GPX, GeoJSON or KML file</li>
+                            <li>Choose any overrides you want to apply</li>
+                            <li>You can choose to randomize the accuracy, speed, altitude and altitude accuracy values</li>
+                            <li>Enable the "Auto-calculate bearing to next point" option if you want the route to automatically calculate the bearing to the next coordinate</li>
+                            <li>Click "Start Route" to start the route simulation</li>
+                            <li>Route will carry on until it reaches the end. At the end, the geolocation position will stick to the last point</li>
+                        </ol>
+                        
+                        <h4>Notes:</h4>
+                        <ul>
+                            <li>Altitude and Time values are taken from the KML/GPX file when available</li>
+                            <li>If any values are put in the overrides, they will take precedence over the file values</li>
+                            <li>Randomized values will be different on each route start</li>
+                        </ul>
+                    </div>
+                </details>
             </div>
         </div>
     </div>
