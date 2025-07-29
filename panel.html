@@ -170,6 +170,25 @@
                         <input type="number" id="defaultAccuracy" min="1" value="10">
                     </div>
 
+                    <div class="toggle-section">
+                        <label class="toggle">
+                            <input type="checkbox" id="randomizeAccuracy">
+                            <span class="slider"></span>
+                            <span class="label">Randomize Accuracy</span>
+                        </label>
+                    </div>
+
+                    <div class="accuracy-range" id="accuracyRange" style="display: none;">
+                        <div class="input-group">
+                            <label for="minAccuracy">Min Accuracy (metres):</label>
+                            <input type="number" id="minAccuracy" min="1" value="5">
+                        </div>
+                        <div class="input-group">
+                            <label for="maxAccuracy">Max Accuracy (metres):</label>
+                            <input type="number" id="maxAccuracy" min="1" value="20">
+                        </div>
+                    </div>
+
                     <div class="action-buttons">
                         <button id="startRouteBtn" class="apply-btn">▶️ Start Route</button>
                         <button id="pauseRouteBtn" class="pause-btn" disabled>⏸️ Pause</button>

@@ -551,6 +551,38 @@ class RouteSimulation {
         document.getElementById('stopRouteBtn').addEventListener('click', () => {
             this.stopRoute();
         });
+
+        // Randomize accuracy toggle
+        document.getElementById('randomizeAccuracy').addEventListener('change', (e) => {
+            this.toggleAccuracyRange(e.target.checked);
+        });
+    }
+
+    toggleAccuracyRange(show) {
+        const rangeElement = document.getElementById('accuracyRange');
+        if (show) {
+            rangeElement.style.display = 'block';
+        } else {
+            rangeElement.style.display = 'none';
+        }
+    }
+
+    getAccuracy() {
+        const randomizeAccuracy = document.getElementById('randomizeAccuracy').checked;
+        
+        if (randomizeAccuracy) {
+            const minAccuracy = parseInt(document.getElementById('minAccuracy').value) || 5;
+            const maxAccuracy = parseInt(document.getElementById('maxAccuracy').value) || 20;
+            
+            // Ensure min is not greater than max
+            const min = Math.min(minAccuracy, maxAccuracy);
+            const max = Math.max(minAccuracy, maxAccuracy);
+            
+            // Generate random accuracy between min and max (inclusive)
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        } else {
+            return parseInt(document.getElementById('defaultAccuracy').value) || 10;
+        }
     }
 
     async handleFileUpload(file) {
@@ -767,15 +799,15 @@ class RouteSimulation {
         
         try {
             const firstPoint = this.routeData[0];
-            const defaultAccuracy = parseInt(document.getElementById('defaultAccuracy').value);
+            const accuracy = this.getAccuracy();
             
             const locationData = {
                 enabled: true,
                 latitude: firstPoint.lat,
                 longitude: firstPoint.lng,
-                accuracy: defaultAccuracy,
+                accuracy: accuracy,
                 altitude: firstPoint.altitude,
-                altitudeAccuracy: firstPoint.altitude ? defaultAccuracy : null,
+                altitudeAccuracy: firstPoint.altitude ? accuracy : null,
                 heading: null,
                 speed: null
             };
@@ -922,16 +954,16 @@ class RouteSimulation {
         const point = this.routeData[this.currentIndex];
         const playbackSpeed = parseFloat(document.getElementById('playbackSpeed').value);
         const defaultInterval = parseFloat(document.getElementById('defaultInterval').value) * 1000; // Convert to ms
-        const defaultAccuracy = parseInt(document.getElementById('defaultAccuracy').value);
+        const accuracy = this.getAccuracy();
 
         // Create location override data
         const locationData = {
             enabled: true,
             latitude: point.lat,
             longitude: point.lng,
-            accuracy: defaultAccuracy,
+            accuracy: accuracy,
             altitude: point.altitude,
-            altitudeAccuracy: point.altitude ? defaultAccuracy : null,
+            altitudeAccuracy: point.altitude ? accuracy : null,
             heading: null,
             speed: null
         };

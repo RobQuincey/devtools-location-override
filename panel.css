@@ -173,6 +173,22 @@ body {
     font-size: 12px;
 }
 
+.accuracy-range {
+    padding: 12px;
+    border-left: 3px solid var(--border-color);
+    background: var(--bg-secondary);
+    border-radius: 0 var(--border-radius) var(--border-radius) 0;
+    transition: var(--transition);
+}
+
+.accuracy-range .input-group {
+    margin-bottom: 12px;
+}
+
+.accuracy-range .input-group:last-child {
+    margin-bottom: 0;
+}
+
 .advanced-options {
     margin: 16px 0;
     border: 1px solid var(--border-color);
