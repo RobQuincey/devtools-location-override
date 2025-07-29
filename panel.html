@@ -192,6 +192,15 @@
                     <details class="advanced-options" id="routeAdvancedOptions">
                         <summary>Advanced options</summary>
                         <div class="advanced-content">
+                            <div class="toggle-section">
+                                <label class="toggle">
+                                    <input type="checkbox" id="calculateBearing">
+                                    <span class="slider"></span>
+                                    <span class="label">Auto-calculate bearing to next point</span>
+                                </label>
+                                <small>When enabled, heading will be automatically calculated using the direction to the next coordinate</small>
+                            </div>
+
                             <div class="input-group">
                                 <label for="routeHeading">Heading (degrees):</label>
                                 <input type="number" id="routeHeading" min="0" placeholder="e.g., 180" value="">
@@ -204,16 +213,73 @@
                                 <small>Minimum: 0 metres/second</small>
                             </div>
 
+                            <div class="toggle-section">
+                                <label class="toggle">
+                                    <input type="checkbox" id="randomizeSpeed">
+                                    <span class="slider"></span>
+                                    <span class="label">Randomize Speed</span>
+                                </label>
+                            </div>
+
+                            <div class="accuracy-range" id="speedRange" style="display: none;">
+                                <div class="input-group">
+                                    <label for="minSpeed">Min Speed (m/s):</label>
+                                    <input type="number" id="minSpeed" min="0" step="0.1" value="1.0">
+                                </div>
+                                <div class="input-group">
+                                    <label for="maxSpeed">Max Speed (m/s):</label>
+                                    <input type="number" id="maxSpeed" min="0" step="0.1" value="5.0">
+                                </div>
+                            </div>
+
                             <div class="input-group">
                                 <label for="routeAltitude">Altitude (metres):</label>
                                 <input type="number" id="routeAltitude" placeholder="e.g., 100" value="">
                                 <small>Minimum: 0 metres</small>
                             </div>
 
+                            <div class="toggle-section">
+                                <label class="toggle">
+                                    <input type="checkbox" id="randomizeAltitude">
+                                    <span class="slider"></span>
+                                    <span class="label">Randomize Altitude</span>
+                                </label>
+                            </div>
+
+                            <div class="accuracy-range" id="altitudeRange" style="display: none;">
+                                <div class="input-group">
+                                    <label for="minAltitude">Min Altitude (metres):</label>
+                                    <input type="number" id="minAltitude" min="0" value="50">
+                                </div>
+                                <div class="input-group">
+                                    <label for="maxAltitude">Max Altitude (metres):</label>
+                                    <input type="number" id="maxAltitude" min="0" value="150">
+                                </div>
+                            </div>
+
                             <div class="input-group">
                                 <label for="routeAltitudeAccuracy">Altitude Accuracy (metres):</label>
                                 <input type="number" id="routeAltitudeAccuracy" min="0" placeholder="e.g., 10" value="">
                                 <small>Minimum: 0 metres</small>
+                            </div>
+
+                            <div class="toggle-section">
+                                <label class="toggle">
+                                    <input type="checkbox" id="randomizeAltitudeAccuracy">
+                                    <span class="slider"></span>
+                                    <span class="label">Randomize Altitude Accuracy</span>
+                                </label>
+                            </div>
+
+                            <div class="accuracy-range" id="altitudeAccuracyRange" style="display: none;">
+                                <div class="input-group">
+                                    <label for="minAltitudeAccuracy">Min Alt. Accuracy (metres):</label>
+                                    <input type="number" id="minAltitudeAccuracy" min="0" value="5">
+                                </div>
+                                <div class="input-group">
+                                    <label for="maxAltitudeAccuracy">Max Alt. Accuracy (metres):</label>
+                                    <input type="number" id="maxAltitudeAccuracy" min="0" value="25">
+                                </div>
                             </div>
                         </div>
                     </details>

@@ -558,6 +558,26 @@ class RouteSimulation {
             this.toggleAccuracyRange(e.target.checked);
         });
 
+        // Randomize speed toggle
+        document.getElementById('randomizeSpeed').addEventListener('change', (e) => {
+            this.toggleSpeedRange(e.target.checked);
+        });
+
+        // Randomize altitude toggle
+        document.getElementById('randomizeAltitude').addEventListener('change', (e) => {
+            this.toggleAltitudeRange(e.target.checked);
+        });
+
+        // Randomize altitude accuracy toggle
+        document.getElementById('randomizeAltitudeAccuracy').addEventListener('change', (e) => {
+            this.toggleAltitudeAccuracyRange(e.target.checked);
+        });
+
+        // Calculate bearing toggle
+        document.getElementById('calculateBearing').addEventListener('change', (e) => {
+            this.toggleBearingMode(e.target.checked);
+        });
+
         // Route advanced options
         const routeAdvancedOptions = document.getElementById('routeAdvancedOptions');
         if (routeAdvancedOptions) {
@@ -576,6 +596,52 @@ class RouteSimulation {
         }
     }
 
+    toggleSpeedRange(show) {
+        const rangeElement = document.getElementById('speedRange');
+        if (show) {
+            rangeElement.style.display = 'block';
+        } else {
+            rangeElement.style.display = 'none';
+        }
+    }
+
+    toggleAltitudeRange(show) {
+        const rangeElement = document.getElementById('altitudeRange');
+        if (show) {
+            rangeElement.style.display = 'block';
+        } else {
+            rangeElement.style.display = 'none';
+        }
+    }
+
+    toggleAltitudeAccuracyRange(show) {
+        const rangeElement = document.getElementById('altitudeAccuracyRange');
+        if (show) {
+            rangeElement.style.display = 'block';
+        } else {
+            rangeElement.style.display = 'none';
+        }
+    }
+
+    toggleBearingMode(calculateMode) {
+        const headingInput = document.getElementById('routeHeading');
+        const headingLabel = headingInput.parentElement.querySelector('label');
+        
+        if (calculateMode) {
+            headingInput.disabled = true;
+            headingInput.placeholder = 'Auto-calculated from route';
+            if (headingLabel) {
+                headingLabel.textContent = 'Heading (auto-calculated):';
+            }
+        } else {
+            headingInput.disabled = false;
+            headingInput.placeholder = '';
+            if (headingLabel) {
+                headingLabel.textContent = 'Heading (degrees):';
+            }
+        }
+    }
+
     getAccuracy() {
         const randomizeAccuracy = document.getElementById('randomizeAccuracy').checked;
         
@@ -591,6 +657,126 @@ class RouteSimulation {
             return Math.floor(Math.random() * (max - min + 1)) + min;
         } else {
             return parseInt(document.getElementById('defaultAccuracy').value) || 10;
+        }
+    }
+
+    getSpeed() {
+        const randomizeSpeed = document.getElementById('randomizeSpeed').checked;
+        
+        if (randomizeSpeed) {
+            const minSpeed = parseFloat(document.getElementById('minSpeed').value) || 1.0;
+            const maxSpeed = parseFloat(document.getElementById('maxSpeed').value) || 5.0;
+            
+            // Ensure min is not greater than max
+            const min = Math.min(minSpeed, maxSpeed);
+            const max = Math.max(minSpeed, maxSpeed);
+            
+            // Generate random speed between min and max, rounded to nearest integer
+            return Math.round(Math.random() * (max - min) + min);
+        } else {
+            const routeSpeed = parseFloat(document.getElementById('routeSpeed').value);
+            return routeSpeed || null;
+        }
+    }
+
+    getAltitude() {
+        const randomizeAltitude = document.getElementById('randomizeAltitude').checked;
+        
+        if (randomizeAltitude) {
+            const minAltitude = parseFloat(document.getElementById('minAltitude').value) || 50;
+            const maxAltitude = parseFloat(document.getElementById('maxAltitude').value) || 150;
+            
+            // Ensure min is not greater than max
+            const min = Math.min(minAltitude, maxAltitude);
+            const max = Math.max(minAltitude, maxAltitude);
+            
+            // Generate random altitude between min and max, rounded to nearest integer
+            return Math.round(Math.random() * (max - min) + min);
+        } else {
+            const routeAltitude = parseFloat(document.getElementById('routeAltitude').value);
+            return routeAltitude || null;
+        }
+    }
+
+    getAltitudeAccuracy() {
+        const randomizeAltitudeAccuracy = document.getElementById('randomizeAltitudeAccuracy').checked;
+        
+        if (randomizeAltitudeAccuracy) {
+            const minAltitudeAccuracy = parseFloat(document.getElementById('minAltitudeAccuracy').value) || 5;
+            const maxAltitudeAccuracy = parseFloat(document.getElementById('maxAltitudeAccuracy').value) || 25;
+            
+            // Ensure min is not greater than max
+            const min = Math.min(minAltitudeAccuracy, maxAltitudeAccuracy);
+            const max = Math.max(minAltitudeAccuracy, maxAltitudeAccuracy);
+            
+            // Generate random altitude accuracy between min and max, rounded to nearest integer
+            return Math.round(Math.random() * (max - min) + min);
+        } else {
+            const routeAltitudeAccuracy = parseFloat(document.getElementById('routeAltitudeAccuracy').value);
+            return routeAltitudeAccuracy || null;
+        }
+    }
+
+    /**
+     * Calculate the bearing (heading) from one coordinate to another using the haversine formula
+     * @param {number} lat1 - Latitude of the first point in degrees
+     * @param {number} lng1 - Longitude of the first point in degrees
+     * @param {number} lat2 - Latitude of the second point in degrees
+     * @param {number} lng2 - Longitude of the second point in degrees
+     * @returns {number} - Bearing in degrees (0-360), where 0 is North
+     */
+    calculateBearing(lat1, lng1, lat2, lng2) {
+        // Convert degrees to radians
+        const φ1 = lat1 * Math.PI / 180;
+        const φ2 = lat2 * Math.PI / 180;
+        const Δλ = (lng2 - lng1) * Math.PI / 180;
+
+        // Calculate bearing using haversine formula
+        const y = Math.sin(Δλ) * Math.cos(φ2);
+        const x = Math.cos(φ1) * Math.sin(φ2) - Math.sin(φ1) * Math.cos(φ2) * Math.cos(Δλ);
+
+        // Convert to degrees and normalize to 0-360
+        let bearing = Math.atan2(y, x) * 180 / Math.PI;
+        bearing = (bearing + 360) % 360;
+
+        return Math.round(bearing);
+    }
+
+    getBearing(currentIndex = null) {
+        const calculateBearing = document.getElementById('calculateBearing').checked;
+        
+        if (calculateBearing && this.routeData && currentIndex !== null) {
+            // Calculate bearing to next point
+            const nextIndex = currentIndex + 1;
+            if (nextIndex < this.routeData.length) {
+                const currentPoint = this.routeData[currentIndex];
+                const nextPoint = this.routeData[nextIndex];
+                
+                return this.calculateBearing(
+                    currentPoint.lat, 
+                    currentPoint.lng, 
+                    nextPoint.lat, 
+                    nextPoint.lng
+                );
+            } else {
+                // For the last point, return the same bearing as the previous segment
+                if (currentIndex > 0) {
+                    const prevPoint = this.routeData[currentIndex - 1];
+                    const currentPoint = this.routeData[currentIndex];
+                    
+                    return this.calculateBearing(
+                        prevPoint.lat, 
+                        prevPoint.lng, 
+                        currentPoint.lat, 
+                        currentPoint.lng
+                    );
+                }
+                // If only one point, return null
+                return null;
+            }
+        } else {
+            const routeHeading = parseFloat(document.getElementById('routeHeading').value);
+            return routeHeading || null;
         }
     }
 
@@ -618,12 +804,12 @@ class RouteSimulation {
         }
     }
 
-    getRouteAdvancedOptions() {
+    getRouteAdvancedOptions(currentIndex = null) {
         return {
-            heading: parseFloat(document.getElementById('routeHeading').value) || null,
-            speed: parseFloat(document.getElementById('routeSpeed').value) || null,
-            altitude: parseFloat(document.getElementById('routeAltitude').value) || null,
-            altitudeAccuracy: parseFloat(document.getElementById('routeAltitudeAccuracy').value) || null
+            heading: this.getBearing(currentIndex),
+            speed: this.getSpeed(),
+            altitude: this.getAltitude(),
+            altitudeAccuracy: this.getAltitudeAccuracy()
         };
     }
 
@@ -842,7 +1028,7 @@ class RouteSimulation {
         try {
             const firstPoint = this.routeData[0];
             const accuracy = this.getAccuracy();
-            const advancedOptions = this.getRouteAdvancedOptions();
+            const advancedOptions = this.getRouteAdvancedOptions(0); // Pass index 0 for first point
             
             const locationData = {
                 enabled: true,
@@ -998,7 +1184,7 @@ class RouteSimulation {
         const playbackSpeed = parseFloat(document.getElementById('playbackSpeed').value);
         const defaultInterval = parseFloat(document.getElementById('defaultInterval').value) * 1000; // Convert to ms
         const accuracy = this.getAccuracy();
-        const advancedOptions = this.getRouteAdvancedOptions();
+        const advancedOptions = this.getRouteAdvancedOptions(this.currentIndex); // Pass current index
 
         // Create location override data
         const locationData = {
