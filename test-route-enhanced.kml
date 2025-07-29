@@ -1,0 +1,631 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+  <Document>
+    <name>Sample Route with Elevation, Bearing and Speed</name>
+    <description>A sample route through Dorset with elevation, bearing, and speed data</description>
+    
+    <Style id="trackStyle">
+      <LineStyle>
+        <color>ff0000ff</color>
+        <width>3</width>
+      </LineStyle>
+    </Style>
+    
+    <Placemark>
+      <name>Enhanced Sample Track</name>
+      <description>Track with elevation, bearing, and speed information</description>
+      <styleUrl>#trackStyle</styleUrl>
+      
+      <LineString>
+        <extrude>1</extrude>
+        <altitudeMode>absolute</altitudeMode>
+        <coordinates>
+          -2.4760411088448984,50.81066242588522,42.3
+          -2.475769153733958,50.81108191461566,45.7
+          -2.4757834907098655,50.811218581219855,43.1
+          -2.475722644403221,50.81160165972871,48.9
+          -2.4756883314120897,50.81204752348149,51.2
+          -2.4757021126827157,50.812129502309475,47.6
+          -2.4758171883721043,50.81241068646363,52.4
+          -2.4758740734481552,50.812487020375414,49.8
+          -2.47546294402055,50.812628640832244,55.3
+          -2.4753813581119335,50.8126699909774,53.7
+          -2.4752573068805,50.812779876674334,58.1
+          -2.475189695457469,50.812922346271364,61.4
+          -2.4752206566550976,50.81299605163036,59.2
+          -2.4754214124094878,50.81321399340936,62.8
+          -2.4750996087394808,50.813423264143545,65.5
+          -2.4747826938196047,50.81366792546445,68.1
+          -2.4746793035565116,50.81368748787644,69.7
+          -2.4748087286068268,50.81368149196484,67.3
+          -2.4755038295226255,50.813700535647605,64.9
+          -2.475537430953434,50.81403400771413,71.2
+          -2.4756261971597393,50.814274281747714,73.8
+          -2.475841409771674,50.814639826822436,76.4
+          -2.4760183367254247,50.81506021777594,78.9
+          -2.4760178306303806,50.81543484635615,81.5
+          -2.4758870040667382,50.81572797181355,83.2
+          -2.475613934731842,50.816040818835795,85.7
+          -2.475203130040121,50.816392509545445,88.1
+          -2.4748989503139613,50.81661797763878,90.6
+          -2.4747843246105727,50.81680712483739,92.3
+          -2.474558000412606,50.817048682006835,94.8
+          -2.474029231443311,50.817535323397756,97.2
+          -2.4740676770709897,50.818335896647724,102.5
+          -2.474204711405976,50.81888624135008,105.1
+          -2.474209579700017,50.81936665917835,107.8
+          -2.474453435005331,50.81948097233252,109.4
+          -2.4763469128922595,50.8197230809181,106.7
+          -2.4787868542042073,50.82000135150858,98.3
+          -2.479071085850728,50.81977391268369,95.1
+          -2.4793680385347505,50.819480091279324,92.7
+          -2.4796592495933742,50.81928031295023,89.5
+          -2.480050262562151,50.818952006370154,86.2
+          -2.4806293203888417,50.81846683736003,82.9
+          -2.480943303148898,50.818275713900334,79.6
+        </coordinates>
+      </LineString>
+    </Placemark>
+    
+    <!-- Individual placemarks with detailed track point data -->
+    <Placemark>
+      <name>Point 1</name>
+      <TimeStamp><when>2025-01-01T10:00:00Z</when></TimeStamp>
+      <Point>
+        <coordinates>-2.4760411088448984,50.81066242588522,42.3</coordinates>
+      </Point>
+      <ExtendedData>
+        <Data name="bearing"><value>45.2</value></Data>
+        <Data name="speed"><value>3.4</value></Data>
+        <Data name="elevation"><value>42.3</value></Data>
+      </ExtendedData>
+    </Placemark>
+    
+    <Placemark>
+      <name>Point 2</name>
+      <TimeStamp><when>2025-01-01T10:00:10Z</when></TimeStamp>
+      <Point>
+        <coordinates>-2.475769153733958,50.81108191461566,45.7</coordinates>
+      </Point>
+      <ExtendedData>
+        <Data name="bearing"><value>15.8</value></Data>
+        <Data name="speed"><value>4.1</value></Data>
+        <Data name="elevation"><value>45.7</value></Data>
+      </ExtendedData>
+    </Placemark>
+    
+    <Placemark>
+      <name>Point 3</name>
+      <TimeStamp><when>2025-01-01T10:00:20Z</when></TimeStamp>
+      <Point>
+        <coordinates>-2.4757834907098655,50.811218581219855,43.1</coordinates>
+      </Point>
+      <ExtendedData>
+        <Data name="bearing"><value>8.6</value></Data>
+        <Data name="speed"><value>2.8</value></Data>
+        <Data name="elevation"><value>43.1</value></Data>
+      </ExtendedData>
+    </Placemark>
+    
+    <Placemark>
+      <name>Point 4</name>
+      <TimeStamp><when>2025-01-01T10:00:30Z</when></TimeStamp>
+      <Point>
+        <coordinates>-2.475722644403221,50.81160165972871,48.9</coordinates>
+      </Point>
+      <ExtendedData>
+        <Data name="bearing"><value>12.3</value></Data>
+        <Data name="speed"><value>3.7</value></Data>
+        <Data name="elevation"><value>48.9</value></Data>
+      </ExtendedData>
+    </Placemark>
+    
+    <Placemark>
+      <name>Point 5</name>
+      <TimeStamp><when>2025-01-01T10:00:40Z</when></TimeStamp>
+      <Point>
+        <coordinates>-2.4756883314120897,50.81204752348149,51.2</coordinates>
+      </Point>
+      <ExtendedData>
+        <Data name="bearing"><value>6.1</value></Data>
+        <Data name="speed"><value>4.5</value></Data>
+        <Data name="elevation"><value>51.2</value></Data>
+      </ExtendedData>
+    </Placemark>
+    
+    <Placemark>
+      <name>Point 6</name>
+      <TimeStamp><when>2025-01-01T10:00:50Z</when></TimeStamp>
+      <Point>
+        <coordinates>-2.4757021126827157,50.812129502309475,47.6</coordinates>
+      </Point>
+      <ExtendedData>
+        <Data name="bearing"><value>355.4</value></Data>
+        <Data name="speed"><value>2.1</value></Data>
+        <Data name="elevation"><value>47.6</value></Data>
+      </ExtendedData>
+    </Placemark>
+    
+    <Placemark>
+      <name>Point 7</name>
+      <TimeStamp><when>2025-01-01T10:01:00Z</when></TimeStamp>
+      <Point>
+        <coordinates>-2.4758171883721043,50.81241068646363,52.4</coordinates>
+      </Point>
+      <ExtendedData>
+        <Data name="bearing"><value>328.7</value></Data>
+        <Data name="speed"><value>3.9</value></Data>
+        <Data name="elevation"><value>52.4</value></Data>
+      </ExtendedData>
+    </Placemark>
+    
+    <Placemark>
+      <name>Point 8</name>
+      <TimeStamp><when>2025-01-01T10:01:10Z</when></TimeStamp>
+      <Point>
+        <coordinates>-2.4758740734481552,50.812487020375414,49.8</coordinates>
+      </Point>
+      <ExtendedData>
+        <Data name="bearing"><value>315.2</value></Data>
+        <Data name="speed"><value>3.2</value></Data>
+        <Data name="elevation"><value>49.8</value></Data>
+      </ExtendedData>
+    </Placemark>
+    
+    <Placemark>
+      <name>Point 9</name>
+      <TimeStamp><when>2025-01-01T10:01:20Z</when></TimeStamp>
+      <Point>
+        <coordinates>-2.47546294402055,50.812628640832244,55.3</coordinates>
+      </Point>
+      <ExtendedData>
+        <Data name="bearing"><value>62.8</value></Data>
+        <Data name="speed"><value>4.7</value></Data>
+        <Data name="elevation"><value>55.3</value></Data>
+      </ExtendedData>
+    </Placemark>
+    
+    <Placemark>
+      <name>Point 10</name>
+      <TimeStamp><when>2025-01-01T10:01:30Z</when></TimeStamp>
+      <Point>
+        <coordinates>-2.4753813581119335,50.8126699909774,53.7</coordinates>
+      </Point>
+      <ExtendedData>
+        <Data name="bearing"><value>58.4</value></Data>
+        <Data name="speed"><value>2.9</value></Data>
+        <Data name="elevation"><value>53.7</value></Data>
+      </ExtendedData>
+    </Placemark>
+    
+    <Placemark>
+      <name>Point 11</name>
+      <TimeStamp><when>2025-01-01T10:01:40Z</when></TimeStamp>
+      <Point>
+        <coordinates>-2.4752573068805,50.812779876674334,58.1</coordinates>
+      </Point>
+      <ExtendedData>
+        <Data name="bearing"><value>72.1</value></Data>
+        <Data name="speed"><value>3.8</value></Data>
+        <Data name="elevation"><value>58.1</value></Data>
+      </ExtendedData>
+    </Placemark>
+    
+    <Placemark>
+      <name>Point 12</name>
+      <TimeStamp><when>2025-01-01T10:01:50Z</when></TimeStamp>
+      <Point>
+        <coordinates>-2.475189695457469,50.812922346271364,61.4</coordinates>
+      </Point>
+      <ExtendedData>
+        <Data name="bearing"><value>76.9</value></Data>
+        <Data name="speed"><value>4.3</value></Data>
+        <Data name="elevation"><value>61.4</value></Data>
+      </ExtendedData>
+    </Placemark>
+    
+    <Placemark>
+      <name>Point 13</name>
+      <TimeStamp><when>2025-01-01T10:02:00Z</when></TimeStamp>
+      <Point>
+        <coordinates>-2.4752206566550976,50.81299605163036,59.2</coordinates>
+      </Point>
+      <ExtendedData>
+        <Data name="bearing"><value>254.3</value></Data>
+        <Data name="speed"><value>2.5</value></Data>
+        <Data name="elevation"><value>59.2</value></Data>
+      </ExtendedData>
+    </Placemark>
+    
+    <Placemark>
+      <name>Point 14</name>
+      <TimeStamp><when>2025-01-01T10:02:10Z</when></TimeStamp>
+      <Point>
+        <coordinates>-2.4754214124094878,50.81321399340936,62.8</coordinates>
+      </Point>
+      <ExtendedData>
+        <Data name="bearing"><value>295.7</value></Data>
+        <Data name="speed"><value>3.6</value></Data>
+        <Data name="elevation"><value>62.8</value></Data>
+      </ExtendedData>
+    </Placemark>
+    
+    <Placemark>
+      <name>Point 15</name>
+      <TimeStamp><when>2025-01-01T10:02:20Z</when></TimeStamp>
+      <Point>
+        <coordinates>-2.4750996087394808,50.813423264143545,65.5</coordinates>
+      </Point>
+      <ExtendedData>
+        <Data name="bearing"><value>51.2</value></Data>
+        <Data name="speed"><value>4.8</value></Data>
+        <Data name="elevation"><value>65.5</value></Data>
+      </ExtendedData>
+    </Placemark>
+    
+    <Placemark>
+      <name>Point 16</name>
+      <TimeStamp><when>2025-01-01T10:02:30Z</when></TimeStamp>
+      <Point>
+        <coordinates>-2.4747826938196047,50.81366792546445,68.1</coordinates>
+      </Point>
+      <ExtendedData>
+        <Data name="bearing"><value>64.8</value></Data>
+        <Data name="speed"><value>3.1</value></Data>
+        <Data name="elevation"><value>68.1</value></Data>
+      </ExtendedData>
+    </Placemark>
+    
+    <Placemark>
+      <name>Point 17</name>
+      <TimeStamp><when>2025-01-01T10:02:40Z</when></TimeStamp>
+      <Point>
+        <coordinates>-2.4746793035565116,50.81368748787644,69.7</coordinates>
+      </Point>
+      <ExtendedData>
+        <Data name="bearing"><value>89.3</value></Data>
+        <Data name="speed"><value>2.7</value></Data>
+        <Data name="elevation"><value>69.7</value></Data>
+      </ExtendedData>
+    </Placemark>
+    
+    <Placemark>
+      <name>Point 18</name>
+      <TimeStamp><when>2025-01-01T10:02:50Z</when></TimeStamp>
+      <Point>
+        <coordinates>-2.4748087286068268,50.81368149196484,67.3</coordinates>
+      </Point>
+      <ExtendedData>
+        <Data name="bearing"><value>255.1</value></Data>
+        <Data name="speed"><value>1.9</value></Data>
+        <Data name="elevation"><value>67.3</value></Data>
+      </ExtendedData>
+    </Placemark>
+    
+    <Placemark>
+      <name>Point 19</name>
+      <TimeStamp><when>2025-01-01T10:03:00Z</when></TimeStamp>
+      <Point>
+        <coordinates>-2.4755038295226255,50.813700535647605,64.9</coordinates>
+      </Point>
+      <ExtendedData>
+        <Data name="bearing"><value>280.6</value></Data>
+        <Data name="speed"><value>3.5</value></Data>
+        <Data name="elevation"><value>64.9</value></Data>
+      </ExtendedData>
+    </Placemark>
+    
+    <Placemark>
+      <name>Point 20</name>
+      <TimeStamp><when>2025-01-01T10:03:10Z</when></TimeStamp>
+      <Point>
+        <coordinates>-2.475537430953434,50.81403400771413,71.2</coordinates>
+      </Point>
+      <ExtendedData>
+        <Data name="bearing"><value>8.4</value></Data>
+        <Data name="speed"><value>4.2</value></Data>
+        <Data name="elevation"><value>71.2</value></Data>
+      </ExtendedData>
+    </Placemark>
+    
+    <Placemark>
+      <name>Point 21</name>
+      <TimeStamp><when>2025-01-01T10:03:20Z</when></TimeStamp>
+      <Point>
+        <coordinates>-2.4756261971597393,50.814274281747714,73.8</coordinates>
+      </Point>
+      <ExtendedData>
+        <Data name="bearing"><value>355.7</value></Data>
+        <Data name="speed"><value>3.9</value></Data>
+        <Data name="elevation"><value>73.8</value></Data>
+      </ExtendedData>
+    </Placemark>
+    
+    <Placemark>
+      <name>Point 22</name>
+      <TimeStamp><when>2025-01-01T10:03:30Z</when></TimeStamp>
+      <Point>
+        <coordinates>-2.475841409771674,50.814639826822436,76.4</coordinates>
+      </Point>
+      <ExtendedData>
+        <Data name="bearing"><value>347.2</value></Data>
+        <Data name="speed"><value>5.1</value></Data>
+        <Data name="elevation"><value>76.4</value></Data>
+      </ExtendedData>
+    </Placemark>
+    
+    <Placemark>
+      <name>Point 23</name>
+      <TimeStamp><when>2025-01-01T10:03:40Z</when></TimeStamp>
+      <Point>
+        <coordinates>-2.4760183367254247,50.81506021777594,78.9</coordinates>
+      </Point>
+      <ExtendedData>
+        <Data name="bearing"><value>359.8</value></Data>
+        <Data name="speed"><value>4.6</value></Data>
+        <Data name="elevation"><value>78.9</value></Data>
+      </ExtendedData>
+    </Placemark>
+    
+    <Placemark>
+      <name>Point 24</name>
+      <TimeStamp><when>2025-01-01T10:03:50Z</when></TimeStamp>
+      <Point>
+        <coordinates>-2.4760178306303806,50.81543484635615,81.5</coordinates>
+      </Point>
+      <ExtendedData>
+        <Data name="bearing"><value>0.1</value></Data>
+        <Data name="speed"><value>3.7</value></Data>
+        <Data name="elevation"><value>81.5</value></Data>
+      </ExtendedData>
+    </Placemark>
+    
+    <Placemark>
+      <name>Point 25</name>
+      <TimeStamp><when>2025-01-01T10:04:00Z</when></TimeStamp>
+      <Point>
+        <coordinates>-2.4758870040667382,50.81572797181355,83.2</coordinates>
+      </Point>
+      <ExtendedData>
+        <Data name="bearing"><value>25.4</value></Data>
+        <Data name="speed"><value>4.3</value></Data>
+        <Data name="elevation"><value>83.2</value></Data>
+      </ExtendedData>
+    </Placemark>
+    
+    <Placemark>
+      <name>Point 26</name>
+      <TimeStamp><when>2025-01-01T10:04:10Z</when></TimeStamp>
+      <Point>
+        <coordinates>-2.475613934731842,50.816040818835795,85.7</coordinates>
+      </Point>
+      <ExtendedData>
+        <Data name="bearing"><value>42.1</value></Data>
+        <Data name="speed"><value>5.2</value></Data>
+        <Data name="elevation"><value>85.7</value></Data>
+      </ExtendedData>
+    </Placemark>
+    
+    <Placemark>
+      <name>Point 27</name>
+      <TimeStamp><when>2025-01-01T10:04:20Z</when></TimeStamp>
+      <Point>
+        <coordinates>-2.475203130040121,50.816392509545445,88.1</coordinates>
+      </Point>
+      <ExtendedData>
+        <Data name="bearing"><value>58.7</value></Data>
+        <Data name="speed"><value>4.8</value></Data>
+        <Data name="elevation"><value>88.1</value></Data>
+      </ExtendedData>
+    </Placemark>
+    
+    <Placemark>
+      <name>Point 28</name>
+      <TimeStamp><when>2025-01-01T10:04:30Z</when></TimeStamp>
+      <Point>
+        <coordinates>-2.4748989503139613,50.81661797763878,90.6</coordinates>
+      </Point>
+      <ExtendedData>
+        <Data name="bearing"><value>71.3</value></Data>
+        <Data name="speed"><value>3.4</value></Data>
+        <Data name="elevation"><value>90.6</value></Data>
+      </ExtendedData>
+    </Placemark>
+    
+    <Placemark>
+      <name>Point 29</name>
+      <TimeStamp><when>2025-01-01T10:04:40Z</when></TimeStamp>
+      <Point>
+        <coordinates>-2.4747843246105727,50.81680712483739,92.3</coordinates>
+      </Point>
+      <ExtendedData>
+        <Data name="bearing"><value>78.9</value></Data>
+        <Data name="speed"><value>2.8</value></Data>
+        <Data name="elevation"><value>92.3</value></Data>
+      </ExtendedData>
+    </Placemark>
+    
+    <Placemark>
+      <name>Point 30</name>
+      <TimeStamp><when>2025-01-01T10:04:50Z</when></TimeStamp>
+      <Point>
+        <coordinates>-2.474558000412606,50.817048682006835,94.8</coordinates>
+      </Point>
+      <ExtendedData>
+        <Data name="bearing"><value>65.2</value></Data>
+        <Data name="speed"><value>4.1</value></Data>
+        <Data name="elevation"><value>94.8</value></Data>
+      </ExtendedData>
+    </Placemark>
+    
+    <Placemark>
+      <name>Point 31</name>
+      <TimeStamp><when>2025-01-01T10:05:00Z</when></TimeStamp>
+      <Point>
+        <coordinates>-2.474029231443311,50.817535323397756,97.2</coordinates>
+      </Point>
+      <ExtendedData>
+        <Data name="bearing"><value>88.4</value></Data>
+        <Data name="speed"><value>5.7</value></Data>
+        <Data name="elevation"><value>97.2</value></Data>
+      </ExtendedData>
+    </Placemark>
+    
+    <Placemark>
+      <name>Point 32</name>
+      <TimeStamp><when>2025-01-01T10:05:10Z</when></TimeStamp>
+      <Point>
+        <coordinates>-2.4740676770709897,50.818335896647724,102.5</coordinates>
+      </Point>
+      <ExtendedData>
+        <Data name="bearing"><value>358.7</value></Data>
+        <Data name="speed"><value>8.9</value></Data>
+        <Data name="elevation"><value>102.5</value></Data>
+      </ExtendedData>
+    </Placemark>
+    
+    <Placemark>
+      <name>Point 33</name>
+      <TimeStamp><when>2025-01-01T10:05:20Z</when></TimeStamp>
+      <Point>
+        <coordinates>-2.474204711405976,50.81888624135008,105.1</coordinates>
+      </Point>
+      <ExtendedData>
+        <Data name="bearing"><value>354.2</value></Data>
+        <Data name="speed"><value>6.1</value></Data>
+        <Data name="elevation"><value>105.1</value></Data>
+      </ExtendedData>
+    </Placemark>
+    
+    <Placemark>
+      <name>Point 34</name>
+      <TimeStamp><when>2025-01-01T10:05:30Z</when></TimeStamp>
+      <Point>
+        <coordinates>-2.474209579700017,50.81936665917835,107.8</coordinates>
+      </Point>
+      <ExtendedData>
+        <Data name="bearing"><value>359.9</value></Data>
+        <Data name="speed"><value>5.3</value></Data>
+        <Data name="elevation"><value>107.8</value></Data>
+      </ExtendedData>
+    </Placemark>
+    
+    <Placemark>
+      <name>Point 35</name>
+      <TimeStamp><when>2025-01-01T10:05:40Z</when></TimeStamp>
+      <Point>
+        <coordinates>-2.474453435005331,50.81948097233252,109.4</coordinates>
+      </Point>
+      <ExtendedData>
+        <Data name="bearing"><value>281.3</value></Data>
+        <Data name="speed"><value>2.4</value></Data>
+        <Data name="elevation"><value>109.4</value></Data>
+      </ExtendedData>
+    </Placemark>
+    
+    <Placemark>
+      <name>Point 36</name>
+      <TimeStamp><when>2025-01-01T10:05:50Z</when></TimeStamp>
+      <Point>
+        <coordinates>-2.4763469128922595,50.8197230809181,106.7</coordinates>
+      </Point>
+      <ExtendedData>
+        <Data name="bearing"><value>266.7</value></Data>
+        <Data name="speed"><value>3.8</value></Data>
+        <Data name="elevation"><value>106.7</value></Data>
+      </ExtendedData>
+    </Placemark>
+    
+    <Placemark>
+      <name>Point 37</name>
+      <TimeStamp><when>2025-01-01T10:06:00Z</when></TimeStamp>
+      <Point>
+        <coordinates>-2.4787868542042073,50.82000135150858,98.3</coordinates>
+      </Point>
+      <ExtendedData>
+        <Data name="bearing"><value>284.5</value></Data>
+        <Data name="speed"><value>4.6</value></Data>
+        <Data name="elevation"><value>98.3</value></Data>
+      </ExtendedData>
+    </Placemark>
+    
+    <Placemark>
+      <name>Point 38</name>
+      <TimeStamp><when>2025-01-01T10:06:10Z</when></TimeStamp>
+      <Point>
+        <coordinates>-2.479071085850728,50.81977391268369,95.1</coordinates>
+      </Point>
+      <ExtendedData>
+        <Data name="bearing"><value>254.8</value></Data>
+        <Data name="speed"><value>3.2</value></Data>
+        <Data name="elevation"><value>95.1</value></Data>
+      </ExtendedData>
+    </Placemark>
+    
+    <Placemark>
+      <name>Point 39</name>
+      <TimeStamp><when>2025-01-01T10:06:20Z</when></TimeStamp>
+      <Point>
+        <coordinates>-2.4793680385347505,50.819480091279324,92.7</coordinates>
+      </Point>
+      <ExtendedData>
+        <Data name="bearing"><value>248.1</value></Data>
+        <Data name="speed"><value>3.9</value></Data>
+        <Data name="elevation"><value>92.7</value></Data>
+      </ExtendedData>
+    </Placemark>
+    
+    <Placemark>
+      <name>Point 40</name>
+      <TimeStamp><when>2025-01-01T10:06:30Z</when></TimeStamp>
+      <Point>
+        <coordinates>-2.4796592495933742,50.81928031295023,89.5</coordinates>
+      </Point>
+      <ExtendedData>
+        <Data name="bearing"><value>242.6</value></Data>
+        <Data name="speed"><value>2.7</value></Data>
+        <Data name="elevation"><value>89.5</value></Data>
+      </ExtendedData>
+    </Placemark>
+    
+    <Placemark>
+      <name>Point 41</name>
+      <TimeStamp><when>2025-01-01T10:06:40Z</when></TimeStamp>
+      <Point>
+        <coordinates>-2.480050262562151,50.818952006370154,86.2</coordinates>
+      </Point>
+      <ExtendedData>
+        <Data name="bearing"><value>236.4</value></Data>
+        <Data name="speed"><value>4.5</value></Data>
+        <Data name="elevation"><value>86.2</value></Data>
+      </ExtendedData>
+    </Placemark>
+    
+    <Placemark>
+      <name>Point 42</name>
+      <TimeStamp><when>2025-01-01T10:06:50Z</when></TimeStamp>
+      <Point>
+        <coordinates>-2.4806293203888417,50.81846683736003,82.9</coordinates>
+      </Point>
+      <ExtendedData>
+        <Data name="bearing"><value>225.7</value></Data>
+        <Data name="speed"><value>6.3</value></Data>
+        <Data name="elevation"><value>82.9</value></Data>
+      </ExtendedData>
+    </Placemark>
+    
+    <Placemark>
+      <name>Point 43</name>
+      <TimeStamp><when>2025-01-01T10:07:00Z</when></TimeStamp>
+      <Point>
+        <coordinates>-2.480943303148898,50.818275713900334,79.6</coordinates>
+      </Point>
+      <ExtendedData>
+        <Data name="bearing"><value>218.3</value></Data>
+        <Data name="speed"><value>3.1</value></Data>
+        <Data name="elevation"><value>79.6</value></Data>
+      </ExtendedData>
+    </Placemark>
+    
+  </Document>
+</kml>

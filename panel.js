@@ -531,6 +531,7 @@ class RouteSimulation {
         this.startTime = null;
         this.pausedTime = 0;
         this.bindRouteEvents();
+        this.loadRouteAdvancedOptionsState();
     }
 
     bindRouteEvents() {
@@ -556,6 +557,14 @@ class RouteSimulation {
         document.getElementById('randomizeAccuracy').addEventListener('change', (e) => {
             this.toggleAccuracyRange(e.target.checked);
         });
+
+        // Route advanced options
+        const routeAdvancedOptions = document.getElementById('routeAdvancedOptions');
+        if (routeAdvancedOptions) {
+            routeAdvancedOptions.addEventListener('toggle', () => {
+                this.saveRouteAdvancedOptionsState(routeAdvancedOptions.open);
+            });
+        }
     }
 
     toggleAccuracyRange(show) {
@@ -583,6 +592,39 @@ class RouteSimulation {
         } else {
             return parseInt(document.getElementById('defaultAccuracy').value) || 10;
         }
+    }
+
+    async loadRouteAdvancedOptionsState() {
+        try {
+            const result = await chrome.storage.local.get(['routeAdvancedOptionsOpen']);
+            const isOpen = result.routeAdvancedOptionsOpen;
+            
+            if (isOpen !== undefined) {
+                const routeAdvancedOptions = document.getElementById('routeAdvancedOptions');
+                if (routeAdvancedOptions) {
+                    routeAdvancedOptions.open = isOpen;
+                }
+            }
+        } catch (error) {
+            console.error('Failed to load route advanced options state:', error);
+        }
+    }
+
+    async saveRouteAdvancedOptionsState(isOpen) {
+        try {
+            await chrome.storage.local.set({ routeAdvancedOptionsOpen: isOpen });
+        } catch (error) {
+            console.error('Failed to save route advanced options state:', error);
+        }
+    }
+
+    getRouteAdvancedOptions() {
+        return {
+            heading: parseFloat(document.getElementById('routeHeading').value) || null,
+            speed: parseFloat(document.getElementById('routeSpeed').value) || null,
+            altitude: parseFloat(document.getElementById('routeAltitude').value) || null,
+            altitudeAccuracy: parseFloat(document.getElementById('routeAltitudeAccuracy').value) || null
+        };
     }
 
     async handleFileUpload(file) {
@@ -800,16 +842,17 @@ class RouteSimulation {
         try {
             const firstPoint = this.routeData[0];
             const accuracy = this.getAccuracy();
+            const advancedOptions = this.getRouteAdvancedOptions();
             
             const locationData = {
                 enabled: true,
                 latitude: firstPoint.lat,
                 longitude: firstPoint.lng,
                 accuracy: accuracy,
-                altitude: firstPoint.altitude,
-                altitudeAccuracy: firstPoint.altitude ? accuracy : null,
-                heading: null,
-                speed: null
+                altitude: advancedOptions.altitude !== null ? advancedOptions.altitude : firstPoint.altitude,
+                altitudeAccuracy: advancedOptions.altitudeAccuracy !== null ? advancedOptions.altitudeAccuracy : (firstPoint.altitude ? accuracy : null),
+                heading: advancedOptions.heading,
+                speed: advancedOptions.speed
             };
 
             await chrome.tabs.sendMessage(this.tabId, {
@@ -955,6 +998,7 @@ class RouteSimulation {
         const playbackSpeed = parseFloat(document.getElementById('playbackSpeed').value);
         const defaultInterval = parseFloat(document.getElementById('defaultInterval').value) * 1000; // Convert to ms
         const accuracy = this.getAccuracy();
+        const advancedOptions = this.getRouteAdvancedOptions();
 
         // Create location override data
         const locationData = {
@@ -962,10 +1006,10 @@ class RouteSimulation {
             latitude: point.lat,
             longitude: point.lng,
             accuracy: accuracy,
-            altitude: point.altitude,
-            altitudeAccuracy: point.altitude ? accuracy : null,
-            heading: null,
-            speed: null
+            altitude: advancedOptions.altitude !== null ? advancedOptions.altitude : point.altitude,
+            altitudeAccuracy: advancedOptions.altitudeAccuracy !== null ? advancedOptions.altitudeAccuracy : (point.altitude ? accuracy : null),
+            heading: advancedOptions.heading,
+            speed: advancedOptions.speed
         };
 
         try {

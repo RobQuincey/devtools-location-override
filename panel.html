@@ -189,6 +189,35 @@
                         </div>
                     </div>
 
+                    <details class="advanced-options" id="routeAdvancedOptions">
+                        <summary>Advanced options</summary>
+                        <div class="advanced-content">
+                            <div class="input-group">
+                                <label for="routeHeading">Heading (degrees):</label>
+                                <input type="number" id="routeHeading" min="0" placeholder="e.g., 180" value="">
+                                <small>Range: 0 - 360</small>
+                            </div>
+
+                            <div class="input-group">
+                                <label for="routeSpeed">Speed (metres/second):</label>
+                                <input type="number" id="routeSpeed" min="0" placeholder="e.g., 10" value="">
+                                <small>Minimum: 0 metres/second</small>
+                            </div>
+
+                            <div class="input-group">
+                                <label for="routeAltitude">Altitude (metres):</label>
+                                <input type="number" id="routeAltitude" placeholder="e.g., 100" value="">
+                                <small>Minimum: 0 metres</small>
+                            </div>
+
+                            <div class="input-group">
+                                <label for="routeAltitudeAccuracy">Altitude Accuracy (metres):</label>
+                                <input type="number" id="routeAltitudeAccuracy" min="0" placeholder="e.g., 10" value="">
+                                <small>Minimum: 0 metres</small>
+                            </div>
+                        </div>
+                    </details>
+
                     <div class="action-buttons">
                         <button id="startRouteBtn" class="apply-btn">▶️ Start Route</button>
                         <button id="pauseRouteBtn" class="pause-btn" disabled>⏸️ Pause</button>
