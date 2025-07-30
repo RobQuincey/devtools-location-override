@@ -15,11 +15,16 @@
   "license": "MIT",
   "scripts": {
     "build": "echo 'No build process required for this extension'",
-    "pack": "web-ext build --source-dir . --artifacts-dir ./dist",
-    "lint": "web-ext lint"
+    "pack": "web-ext build --source-dir . --artifacts-dir ./dist --ignore-files package.json package-lock.json node_modules/ .git/ .gitignore README.md STORE_LISTING.md PRIVACY.md *.md",
+    "pack-chrome": "node scripts/pack-chrome.js",
+    "lint": "web-ext lint",
+    "clean": "rimraf dist/",
+    "prepare-store": "npm run clean && npm run pack-chrome"
   },
   "devDependencies": {
-    "web-ext": "^7.0.0"
+    "archiver": "^5.3.1",
+    "rimraf": "^5.0.1",
+    "web-ext": "^8.9.0"
   },
   "repository": {
     "type": "git",
