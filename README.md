@@ -4,10 +4,10 @@ A modern Chrome/Edge DevTools extension that allows developers to override all `
 
 ## Features
 
-**Advanced Location Override**: Override latitude, longitude, accuracy, heading, speed, altitude and altitude accuracy with a simple interface
-**Route Simulation**: Upload KML, GeoJSON, or GPX files to simulate movement along routes and override or randomize advanced location values
-**Time-based Playback**: Real-time or custom-speed route simulation with timestamp support
-**Persistent Settings**: Settings persist across page reloads and browser sessions
+- **Advanced Location Override**: Override latitude, longitude, accuracy, heading, speed, altitude and altitude accuracy with a simple interface
+- **Route Simulation**: Upload KML, GeoJSON, or GPX files to simulate movement along routes and override or randomize advanced location values
+- **Time-based Playback**: Real-time or custom-speed route simulation with timestamp support
+- **Persistent Settings**: Settings persist across page reloads and browser sessions
 
 ## Installation
 
