@@ -113,3 +113,6 @@ Please see our guide on [contributing](CONTRIBUTING.md) if you're interested in 
 
 ## Licence
 Unless stated otherwise, the codebase is released under the MIT License. This covers both the codebase and any sample code in the documentation.
+
+## Like it?
+This extension is free forever, and MIT licenced, but if you really like it, you can always [Buy me a coffee](https://buymeacoffee.com/robquincey)
