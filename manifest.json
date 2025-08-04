@@ -13,8 +13,6 @@
   },
   "devtools_page": "devtools.html",
   "permissions": [
-    "activeTab",
-    "scripting",
     "storage"
   ],
   "host_permissions": [
