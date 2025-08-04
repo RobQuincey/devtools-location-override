@@ -1,13 +1,13 @@
 # DevTools Location Override Extension
 
-A modern Chrome/Edge DevTools extension that allows developers to override `navigator.geolocation` values for local development and testing of location-aware applications.
+A modern Chrome/Edge DevTools extension that allows developers to override all `navigator.geolocation` values for local development and testing of location-aware applications.
 
 ## Features
 
-🌍 **Advanced Location Override**: Override latitude, longitude, accuracy, heading, speed, altitude and altitude accuracy with a simple interface
-�️ **Route Simulation**: Upload KML, GeoJSON, or GPX files to simulate movement along routes and override or randomize advanced location values
-⏱️ **Time-based Playback**: Real-time or custom-speed route simulation with timestamp support
-🔄 **Persistent Settings**: Settings persist across page reloads and browser sessions
+- **Advanced Location Override**: Override latitude, longitude, accuracy, heading, speed, altitude and altitude accuracy with a simple interface
+- **Route Simulation**: Upload KML, GeoJSON, or GPX files to simulate movement along routes and override or randomize advanced location values
+- **Time-based Playback**: Real-time or custom-speed route simulation with timestamp support
+- **Persistent Settings**: Settings persist across page reloads and browser sessions
 
 ## Installation
 
@@ -63,18 +63,7 @@ A modern Chrome/Edge DevTools extension that allows developers to override `navi
 - Timestamps are optional but recommended for realistic simulation
 - Altitude data is supported when available
 
-### Security
-
-- Uses `web_accessible_resources` for secure script injection
-- Minimal permissions (only `activeTab`, `scripting`, `storage`)
-- Content Security Policy compliant
-- No external dependencies
-
 ## Development
-
-### Building
-
-No build process required - this is a pure JavaScript extension.
 
 ### Testing
 
@@ -124,3 +113,6 @@ Please see our guide on [contributing](CONTRIBUTING.md) if you're interested in 
 
 ## Licence
 Unless stated otherwise, the codebase is released under the MIT License. This covers both the codebase and any sample code in the documentation.
+
+## Like it?
+This extension is free forever, and MIT licenced, but if you really like it, you can always [Buy me a coffee](https://buymeacoffee.com/robquincey)
