@@ -12,7 +12,8 @@ A modern Chrome/Edge DevTools extension that allows developers to override all `
 ## Installation
 
 ### Install from Chrome or Edge Extensions stores
-- TODO add links when published
+- [Install from Chrome Web store](https://chromewebstore.google.com/detail/devtools-advanced-locatio/pboglnnmnkkbdgflckmjhakpdejmnpli)
+- [Install from Edge Add-ons store](https://microsoftedge.microsoft.com/addons/detail/devtools-advanced-locatio/fnancgkkcmppanndodgcafcacohmdfhc)
 
 ### For development
 
