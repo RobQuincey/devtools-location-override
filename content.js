@@ -1,4 +1,4 @@
-// Content script - runs in the context of web pages
+// Content script - runs in ISOLATED world with access to chrome APIs
 (function() {
     'use strict';
 
@@ -8,31 +8,33 @@
     }
     window.locationOverrideContentScriptLoaded = true;
 
-    let injected = false;
+    // Listen for messages from inject.js (MAIN world)
+    window.addEventListener('message', async function(event) {
+        if (event.source !== window) return;
 
-    // Inject the override script into the page's main world
-    function injectScript() {
-        if (injected) return;
-        injected = true;
-
-        const script = document.createElement('script');
-        script.src = chrome.runtime.getURL('inject.js');
-        script.onload = function() {
-            this.remove();
-        };
-        (document.head || document.documentElement).appendChild(script);
-    }
+        if (event.data.type === 'LOCATION_OVERRIDE_GET_INITIAL') {
+            // Get initial settings from background/storage
+            try {
+                const response = await chrome.runtime.sendMessage({ action: 'getLocationOverride' });
+                window.postMessage({
+                    type: 'LOCATION_OVERRIDE_INITIAL',
+                    data: response
+                }, '*');
+            } catch (error) {
+                console.log('[Location Override] Could not load initial settings:', error);
+            }
+        }
+    });
 
     // Listen for messages from DevTools panel
     chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         if (request.action === 'ping') {
-            // Simple ping to check if content script is available
             sendResponse({ success: true });
             return true;
         }
         
         if (request.action === 'setLocationOverride') {
-            // Forward to injected script
+            // Forward to MAIN world script via window.postMessage
             window.postMessage({
                 type: 'LOCATION_OVERRIDE_SET',
                 data: request.data
@@ -41,7 +43,7 @@
         }
         
         if (request.action === 'clearLocationOverride') {
-            // Forward to injected script
+            // Forward to MAIN world script via window.postMessage
             window.postMessage({
                 type: 'LOCATION_OVERRIDE_CLEAR'
             }, '*');
@@ -50,11 +52,4 @@
         
         return true;
     });
-
-    // Inject script when DOM is ready or immediately if already ready
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', injectScript);
-    } else {
-        injectScript();
-    }
 })();

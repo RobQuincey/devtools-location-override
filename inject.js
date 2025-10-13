@@ -156,6 +156,15 @@
             // Clear all override watches
             clearAllOverrideWatches();
         }
+
+        // Handle initial settings response
+        if (event.data.type === 'LOCATION_OVERRIDE_INITIAL') {
+            if (event.data.data && event.data.data.enabled) {
+                locationOverride = event.data.data;
+                isOverrideActive = true;
+                console.log('[Location Override] Loaded initial settings:', locationOverride);
+            }
+        }
     });
 
     // Helper function to trigger updates for all active watches
@@ -186,30 +195,8 @@
         activeWatches.clear();
     }
 
-    // Load initial settings from storage
-    async function loadInitialSettings() {
-        try {
-            // Send message to background script to get stored settings
-            const response = await new Promise((resolve) => {
-                if (typeof chrome !== 'undefined' && chrome.runtime) {
-                    chrome.runtime.sendMessage({ action: 'getLocationOverride' }, resolve);
-                } else {
-                    resolve(null);
-                }
-            });
-            
-            if (response && response.enabled) {
-                locationOverride = response;
-                isOverrideActive = true;
-                console.log('[Location Override] Loaded initial settings:', locationOverride);
-            }
-        } catch (error) {
-            console.log('[Location Override] Could not load initial settings:', error);
-        }
-    }
-
-    // Initialize
-    loadInitialSettings();
+    // Request initial settings from content script
+    window.postMessage({ type: 'LOCATION_OVERRIDE_GET_INITIAL' }, '*');
 
     console.log('[Location Override] Geolocation override script injected');
 })();
