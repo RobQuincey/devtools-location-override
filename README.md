@@ -1,6 +1,7 @@
 # DevTools Location Override Extension
 
 A modern Chrome/Edge DevTools extension that allows developers to override all `navigator.geolocation` values for local development and testing of location-aware applications.
+<img width="1280" height="800" alt="Screenshot showing a map with overriden location settings" src="https://github.com/user-attachments/assets/d2dae3c4-d229-4d86-9721-a7f5f18e4868" />
 
 ## Features
 
