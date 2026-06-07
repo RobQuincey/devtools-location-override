@@ -32,8 +32,9 @@ async function createChromePackage() {
         
         const outputPath = path.join(distDir, `devtools-location-override-${version}.zip`);
         const output = fs.createWriteStream(outputPath);
-        const archive = archiver('zip', { zlib: { level: 9 } });
-
+        const archive = new archiver.ZipArchive({
+        zlib: { level: 9 },
+        });
         return new Promise((resolve, reject) => {
             output.on('close', () => {
                 console.log(`✅ Chrome Web Store package created: ${outputPath}`);
