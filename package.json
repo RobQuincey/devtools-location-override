@@ -11,8 +11,11 @@
     "development",
     "testing"
   ],
-  "author": "Developer",
+  "author": "Rob Quincey",
   "license": "MIT",
+  "engines" : { 
+    "node" : ">=22.0.0"
+  },
   "scripts": {
     "build": "echo 'No build process required for this extension'",
     "pack": "web-ext build --source-dir . --artifacts-dir ./dist --ignore-files package.json package-lock.json node_modules/ .git/ .gitignore README.md PRIVACY.md *.md",
