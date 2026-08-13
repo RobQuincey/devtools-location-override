@@ -11,6 +11,7 @@ class LocationOverridePanel {
         this.loadSettings();
         this.loadPresets();
         this.loadAdvancedOptionsState();
+        this.loadUIPreferences();
         this.updateUI();
     }
 
@@ -48,6 +49,31 @@ class LocationOverridePanel {
         document.getElementById('clearBtn').addEventListener('click', () => {
             this.clearOverride();
         });
+
+        // Compact UI toggle
+        document.getElementById('compactModeToggle').addEventListener('change', (e) => {
+            this.setCompactMode(e.target.checked);
+        });
+    }
+
+    async loadUIPreferences() {
+        try {
+            const result = await chrome.storage.local.get(['uiCompactMode']);
+            const isCompact = result.uiCompactMode ?? true; // default true only when undefined/null
+            document.getElementById('compactModeToggle').checked = isCompact;
+            document.body.classList.toggle('compact-mode', isCompact);
+        } catch (error) {
+            console.error('Failed to load UI preferences:', error);
+        }
+    }
+
+    async setCompactMode(isCompact) {
+        document.body.classList.toggle('compact-mode', isCompact);
+        try {
+            await chrome.storage.local.set({ uiCompactMode: isCompact });
+        } catch (error) {
+            console.error('Failed to save UI preferences:', error);
+        }
     }
 
     bindPresetEvents() {

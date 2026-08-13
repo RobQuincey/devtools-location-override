@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "DevTools Advanced Location Override",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "Override geolocation for web development and testing. Supports manual coordinates and route simulation with KML/GPX/GeoJSON files.",
   "author": "Rob Quincey",
   "homepage_url": "https://github.com/RobQuincey/devtools-location-override",

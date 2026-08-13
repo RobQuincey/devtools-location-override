@@ -7,12 +7,44 @@
     --warning-color: #fbbc04;
     --bg-primary: #ffffff;
     --bg-secondary: #f8f9fa;
+    --bg-hover: #f1f3f4;
     --text-primary: #202124;
     --text-secondary: #5f6368;
     --border-color: #dadce0;
     --border-radius: 8px;
     --shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
     --transition: all 0.2s ease;
+    --slider-bg: #ccc;
+    --slider-knob: #ffffff;
+
+    /* Density tokens (overridden in compact mode) */
+    --space-lg: 24px;
+    --space-md: 16px;
+    --space-sm: 12px;
+    --font-size-base: 14px;
+    --font-size-small: 12px;
+    --control-radius: 8px;
+    --control-padding: 12px 16px;
+}
+
+/* Automatically follow the OS/DevTools colour scheme */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --primary-color: #8ab4f8;
+        --primary-hover: #aecbfa;
+        --success-color: #81c995;
+        --danger-color: #f28b82;
+        --warning-color: #fdd663;
+        --bg-primary: #292a2d;
+        --bg-secondary: #202124;
+        --bg-hover: #35363a;
+        --text-primary: #e8eaed;
+        --text-secondary: #9aa0a6;
+        --border-color: #5f6368;
+        --shadow: 0 1px 3px rgba(0,0,0,0.4), 0 1px 2px rgba(0,0,0,0.6);
+        --slider-bg: #5f6368;
+        --slider-knob: #e8eaed;
+    }
 }
 
 * {
@@ -27,6 +59,69 @@ body {
     color: var(--text-primary);
     font-size: 14px;
     line-height: 1.5;
+}
+
+/* Toolbar */
+.toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 24px;
+    background: var(--bg-secondary);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.toolbar-title {
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--text-primary);
+    white-space: nowrap;
+}
+
+/* Small mini toggle used for the compact-UI switch */
+.mini-toggle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    font-size: 12px;
+    color: var(--text-secondary);
+    user-select: none;
+}
+
+.mini-toggle input {
+    display: none;
+}
+
+.mini-toggle-track {
+    position: relative;
+    width: 32px;
+    height: 18px;
+    background: var(--slider-bg);
+    border-radius: 18px;
+    transition: var(--transition);
+    flex-shrink: 0;
+}
+
+.mini-toggle-thumb {
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--slider-knob);
+    top: 2px;
+    left: 2px;
+    transition: var(--transition);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.3);
+}
+
+.mini-toggle input:checked + .mini-toggle-track {
+    background: var(--primary-color);
+}
+
+.mini-toggle input:checked + .mini-toggle-track .mini-toggle-thumb {
+    transform: translateX(14px);
 }
 
 .container {
@@ -102,7 +197,7 @@ body {
     position: relative;
     width: 52px;
     height: 28px;
-    background: #ccc;
+    background: var(--slider-bg);
     border-radius: 28px;
     margin-right: 12px;
     transition: var(--transition);
@@ -114,7 +209,7 @@ body {
     width: 24px;
     height: 24px;
     border-radius: 50%;
-    background: white;
+    background: var(--slider-knob);
     top: 2px;
     left: 2px;
     transition: var(--transition);
@@ -207,7 +302,7 @@ body {
 }
 
 .advanced-options summary:hover {
-    background: #f1f3f4;
+    background: var(--bg-hover);
 }
 
 .advanced-options[open] summary {
@@ -679,4 +774,244 @@ select:focus {
     outline: none;
     border-color: var(--primary-color);
     box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.1);
+}
+
+/* ============================================================
+   Compact mode — a denser look closer to a native DevTools
+   extension panel. Purely visual: no markup/IDs/classes used by
+   panel.js are affected, only sizing/spacing is reduced.
+   ============================================================ */
+body.compact-mode {
+    font-size: 12px;
+}
+
+.compact-mode .container {
+    max-width: 480px;
+    margin-top: 0;
+    border-radius: 4px;
+}
+
+.compact-mode .toolbar {
+    padding: 6px 12px;
+}
+
+.compact-mode .toolbar-title {
+    font-size: 12px;
+}
+
+.compact-mode .tab-button {
+    padding: 8px 14px;
+    font-size: 12px;
+}
+
+.compact-mode .controls,
+.compact-mode .route-controls {
+    padding: 12px;
+}
+
+.compact-mode .toggle-section {
+    margin-bottom: 12px;
+}
+
+.compact-mode .toggle {
+    font-size: 12px;
+}
+
+.compact-mode .toggle .slider {
+    width: 32px;
+    height: 18px;
+    margin-right: 8px;
+}
+
+.compact-mode .toggle .slider:before {
+    width: 14px;
+    height: 14px;
+}
+
+.compact-mode .toggle input:checked + .slider:before {
+    transform: translateX(14px);
+}
+
+.compact-mode .input-group {
+    margin-bottom: 10px;
+}
+
+.compact-mode .input-group label {
+    margin-bottom: 3px;
+    font-size: 12px;
+}
+
+.compact-mode .input-group input,
+.compact-mode select {
+    padding: 4px 8px;
+    font-size: 12px;
+    border-width: 1px;
+    border-radius: 3px;
+}
+
+.compact-mode .input-group small {
+    font-size: 11px;
+    margin-top: 2px;
+}
+
+.compact-mode .accuracy-range {
+    padding: 8px;
+}
+
+.compact-mode .accuracy-range .input-group {
+    margin-bottom: 8px;
+}
+
+.compact-mode .advanced-options {
+    margin: 10px 0;
+    border-radius: 4px;
+}
+
+.compact-mode .advanced-options summary {
+    padding: 6px 10px;
+    font-size: 12px;
+}
+
+.compact-mode .advanced-content {
+    padding: 10px;
+}
+
+.compact-mode .advanced-content .input-group {
+    margin-bottom: 10px;
+}
+
+.compact-mode .preset-section {
+    margin: 14px 0;
+}
+
+.compact-mode .preset-section label {
+    margin-bottom: 8px;
+    font-size: 12px;
+}
+
+.compact-mode .preset-buttons {
+    grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+    gap: 6px;
+}
+
+.compact-mode .preset-btn {
+    padding: 5px 8px;
+    font-size: 11px;
+    border-radius: 3px;
+    border-width: 1px;
+}
+
+.compact-mode .preset-management {
+    margin-top: 10px;
+    padding-top: 10px;
+}
+
+.compact-mode .preset-actions {
+    gap: 6px;
+    margin-top: 8px;
+}
+
+.compact-mode .save-preset-btn,
+.compact-mode .cancel-preset-btn {
+    padding: 5px 8px;
+    font-size: 11px;
+    border-radius: 3px;
+}
+
+.compact-mode .action-buttons {
+    gap: 8px;
+    margin-top: 14px;
+}
+
+.compact-mode .apply-btn,
+.compact-mode .clear-btn,
+.compact-mode .pause-btn {
+    padding: 6px 12px;
+    font-size: 12px;
+    border-radius: 3px;
+}
+
+.compact-mode .status-section {
+    padding: 0 12px;
+}
+
+.compact-mode .status {
+    padding: 6px 10px;
+    margin-bottom: 10px;
+    font-size: 12px;
+    border-radius: 3px;
+}
+
+.compact-mode .info-section,
+.compact-mode .help-section {
+    padding: 12px;
+}
+
+.compact-mode .info-section h3,
+.compact-mode .file-upload-section h3,
+.compact-mode .route-settings h3,
+.compact-mode .route-progress h3 {
+    font-size: 12px;
+    margin-bottom: 8px;
+}
+
+.compact-mode .current-location,
+.compact-mode .current-point,
+.compact-mode .file-info {
+    padding: 8px;
+    border-radius: 3px;
+}
+
+.compact-mode .current-location p,
+.compact-mode .current-point p,
+.compact-mode .file-info p {
+    font-size: 11px;
+}
+
+.compact-mode .help-section summary {
+    font-size: 13px;
+    padding: 4px 0;
+}
+
+.compact-mode .help-content {
+    margin-top: 10px;
+    padding-top: 10px;
+}
+
+.compact-mode .help-content h4 {
+    margin: 10px 0 6px 0;
+    font-size: 12px;
+}
+
+.compact-mode .file-input-label {
+    padding: 10px 12px;
+    font-size: 12px;
+    border-radius: 4px;
+}
+
+.compact-mode .file-upload-section,
+.compact-mode .route-settings,
+.compact-mode .route-progress {
+    margin-bottom: 14px;
+}
+
+.compact-mode .progress-bar-container {
+    gap: 8px;
+    margin-bottom: 10px;
+}
+
+.compact-mode .progress-bar {
+    height: 6px;
+}
+
+.compact-mode .progress-text {
+    font-size: 11px;
+}
+
+.compact-mode .route-status-section {
+    padding: 0 12px 12px 12px;
+}
+
+.compact-mode .mini-toggle {
+    font-size: 11px;
 }
