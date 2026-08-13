@@ -59,7 +59,7 @@ class LocationOverridePanel {
     async loadUIPreferences() {
         try {
             const result = await chrome.storage.local.get(['uiCompactMode']);
-            const isCompact = !!result.uiCompactMode;
+            const isCompact = result.uiCompactMode ?? true; // default true only when undefined/null
             document.getElementById('compactModeToggle').checked = isCompact;
             document.body.classList.toggle('compact-mode', isCompact);
         } catch (error) {
